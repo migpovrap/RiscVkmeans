@@ -72,7 +72,7 @@ colors:      .word 0xff0000, 0x00ff00, 0x0000ff  # Cores dos pontos do cluster 0
 .text
     # Chama funcao principal da 1a parte do projeto
     #jal mainSingleCluster
-    jal cleanScreen #Usado para testar 
+    jal cleanScreen
     # Descomentar na 2a parte do projeto:
     #jal mainKMeans
     
@@ -113,6 +113,8 @@ cleanScreen:
     # POR IMPLEMENTAR (1a parte)
     li a2 white
     li a0 32
+    addi sp sp -4
+    sw ra 0(sp)
         ledxloop:
             li a1 32
         
@@ -129,7 +131,9 @@ cleanScreen:
         
             addi a0 a0 -1
             bgtz a0 ledxloop
-                   
+            
+    lw ra 0(sp)
+    addi sp sp 4
     jr ra
 
     
