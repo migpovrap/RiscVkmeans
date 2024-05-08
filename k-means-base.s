@@ -1,13 +1,13 @@
 #
 # IAC 2023/2024 k-means
 # 
-# Grupo:
-# Campus:
+# Grupo: 26
+# Campus: TagusPark
 #
 # Autores:
-# n_aluno, nome
-# n_aluno, nome
-# n_aluno, nome
+# 110126, António Hernâni Rebelo de Carvalho Correia
+# 109686, Miguel Póvoa Raposo
+# 110286, Pedro Miguel Ledo Santos Nazareth
 #
 # Tecnico/ULisboa
 
