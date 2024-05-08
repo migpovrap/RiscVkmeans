@@ -111,7 +111,7 @@ printPoint:
 
 cleanScreen:
     # POR IMPLEMENTAR (1a parte)
-    li a2 white
+    li a2 black
     li a0 32
     addi sp sp -4
     sw ra 0(sp)
