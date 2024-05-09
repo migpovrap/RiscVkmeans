@@ -53,7 +53,7 @@ k:           .word 1
 
 # Abaixo devem ser declarados o vetor clusters (2a parte) e outras estruturas de dados
 # que o grupo considere necessarias para a solucao:
-printedleds:     .zero 4096
+printedleds:     .zero 8192
 nprintleds:    .word 0
 #clusters:    
 
@@ -93,6 +93,18 @@ colors:      .word 0xff0000, 0x00ff00, 0x0000ff  # Cores dos pontos do cluster 0
 # a2: cor
 
 printPoint:
+    la t0 printedleds
+    la t1 nprintleds
+    lw t2 0(t1)
+    addi t2 t2 1
+    sw t2 0(t1)
+    slli t2 t2 3
+    add t0 t0 t2
+    sw a0 0(t0)
+    sw a1 4(t0)
+    
+    
+    
     li a3, LED_MATRIX_0_HEIGHT
     sub a1, a3, a1
     addi a1, a1, -1
@@ -112,18 +124,27 @@ printPoint:
 # Retorno: nenhum
 
 cleanScreen:
-    # POR IMPLEMENTAR (1a parte)
-    li a2 white
-    la t1 nprintleds
-    lw t0 0(t1)
-    looprinted:
-        la a3 printedleds
-        sw a2 0(a3)
-        slli a3 a3 2
-        addi t0 t0 -1
-        bgtz t0 looprinted
-   
-    sw t0 0(t1)
+    la t1 nprintleds    
+    lw t2 0(t1)
+    loop:
+        la t0 printedleds
+        slli t3 t2 3
+        add t0 t0 t3
+        lw a0 0(t0)
+        lw a1 4(t0)
+        li a2 black
+        addi sp sp -12
+        sw t1 0(sp)
+        sw t2 4(sp)
+        sw ra 8(sp)
+        jal printPoint
+        lw t1 0(sp)
+        lw t2 4(sp)
+        lw ra 8(sp)
+        addi sp sp 12
+        addi t2 t2 -1
+        bgtz t2 loop
+
     jr ra
 
     
