@@ -53,6 +53,8 @@ k:           .word 1
 
 # Abaixo devem ser declarados o vetor clusters (2a parte) e outras estruturas de dados
 # que o grupo considere necessarias para a solucao:
+printedleds:     .zero 4096
+nprintleds:    .word 0
 #clusters:    
 
 
@@ -111,29 +113,17 @@ printPoint:
 
 cleanScreen:
     # POR IMPLEMENTAR (1a parte)
-    li a2 black
-    li a0 32
-    addi sp sp -4
-    sw ra 0(sp)
-        ledxloop:
-            li a1 32
-        
-            ledyloop:
-                addi sp sp -8
-                sw a0 0(sp)
-                sw a1 4(sp)
-                jal printPoint
-                lw a0 0(sp)
-                lw a1 4(sp)
-                addi sp sp 8
-                addi a1 a1 -1
-                bgez a1 ledyloop
-        
-            addi a0 a0 -1
-            bgtz a0 ledxloop
-            
-    lw ra 0(sp)
-    addi sp sp 4
+    li a2 white
+    la t1 nprintleds
+    lw t0 0(t1)
+    looprinted:
+        la a3 printedleds
+        sw a2 0(a3)
+        slli a3 a3 2
+        addi t0 t0 -1
+        bgtz t0 looprinted
+   
+    sw t0 0(t1)
     jr ra
 
     
