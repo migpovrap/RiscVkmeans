@@ -74,6 +74,30 @@ colors:      .word 0xff0000, 0x00ff00, 0x0000ff  # Cores dos pontos do cluster 0
 .text
     # Chama funcao principal da 1a parte do projeto
     #jal mainSingleCluster
+    li a0 2
+    li a1 2
+    li a2 white
+    jal printPoint
+    li a0 3
+    li a1 3
+    li a2 white
+    jal printPoint
+    li a0 10
+    li a1 10
+    li a2 white
+    jal printPoint
+    li a0 1
+    li a1 2
+    li a2 white
+    jal printPoint
+    li a0 3
+    li a1 0
+    li a2 white
+    jal printPoint
+    li a0 13
+    li a1 10
+    li a2 white
+    jal printPoint
     jal cleanScreen
     # Descomentar na 2a parte do projeto:
     #jal mainKMeans
