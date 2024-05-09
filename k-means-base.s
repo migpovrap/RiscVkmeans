@@ -117,6 +117,7 @@ colors:      .word 0xff0000, 0x00ff00, 0x0000ff  # Cores dos pontos do cluster 0
 # a2: cor
 
 printPoint:
+
     la t0 printedleds
     la t1 nprintleds
     lw t2 0(t1)
@@ -126,8 +127,6 @@ printPoint:
     add t0 t0 t2
     sw a0 0(t0)
     sw a1 4(t0)
-    
-    
     
     li a3, LED_MATRIX_0_HEIGHT
     sub a1, a3, a1
