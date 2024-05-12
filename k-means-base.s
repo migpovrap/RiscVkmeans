@@ -153,7 +153,31 @@ cleanScreen:
 # Retorno: nenhum
 
 printClusters:
-    # POR IMPLEMENTAR (1a e 2a parte)
+    li t0 1
+    lw t1 k
+    la s1 points
+    lw s0 n_points
+    bne t1 t0 kmaior1
+    k1:
+        slli t0 s0 3
+        add t1 s1 t0
+        lw a1 0(t1)
+        lw a0 4(t1)
+        li a2 white
+        addi sp sp -12
+        sw a0 0(sp)
+        sw s0 4(sp)
+        sw ra 8(sp)
+        jal printPoint
+        lw a0 0(sp)
+        lw s0 4(sp)
+        lw ra 8(sp)
+        addi sp sp 12
+        addi s0 s0 -1
+        bgtz s0 k1
+
+    kmaior1:
+    # POR IMPLEMENTAR (2a parte)
     jr ra
 
 
