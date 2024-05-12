@@ -73,6 +73,11 @@ colors:      .word 0xff0000, 0x00ff00, 0x0000ff  # Cores dos pontos do cluster 0
  
 .text
     # Chama funcao principal da 1a parte do projeto
+    #jal mainSingleCluster
+
+    jal printClusters
+    
+
     jal mainSingleCluster
 
     # Descomentar na 2a parte do projeto:
@@ -143,7 +148,7 @@ cleanScreen:
         addi sp sp 12
         addi t2 t2 -1
         bgtz t2 loop
-
+    sw t2 0(t1)
     jr ra
 
     
