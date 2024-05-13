@@ -161,7 +161,8 @@ printClusters:
         add t1 s1 t0
         lw a1 0(t1)
         lw a0 4(t1)
-        li a2 white
+        la t3 colors
+        lw a2 4(t3)
         addi sp sp -12
         sw a0 0(sp)
         sw s0 4(sp)
