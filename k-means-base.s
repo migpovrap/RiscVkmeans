@@ -53,8 +53,6 @@ k:           .word 1
 
 # Abaixo devem ser declarados o vetor clusters (2a parte) e outras estruturas de dados
 # que o grupo considere necessarias para a solucao:
-printedleds:     .zero 8192
-nprintleds:    .word 0
 #clusters:    
 
 
