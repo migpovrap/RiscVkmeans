@@ -81,6 +81,7 @@ colors:      .word 0xff0000, 0x00ff00, 0x0000ff  # Cores dos pontos do cluster 0
     jal mainSingleCluster
     jal cleanScreen
     jal printClusters
+    jal printCentroids
 
     # Descomentar na 2a parte do projeto:
     #jal mainKMeans
@@ -187,7 +188,26 @@ printClusters:
 # Retorno: nenhum
 
 printCentroids:
+    lw t0 k 
+    addi sp sp -4
+    sw ra 0(sp)
+    printloop:
+        addi sp sp -4
+        sw t0 0(sp)
+        la t1 centroids
+        slli t0 t0 3
+        add t1 t1 t0
+        lw a0 0(t1)
+        lw a1 4(t1)
+        li a2 black
+        jal printPoint
+        lw t0 0(sp)
+        addi sp sp 4
+        addi t0 t0 -1
+        bgez t0 printloop
     # POR IMPLEMENTAR (1a e 2a parte)
+    lw ra 0(sp)
+    addi sp sp 4
     jr ra
     
 
