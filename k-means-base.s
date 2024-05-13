@@ -81,6 +81,8 @@ colors:      .word 0xff0000, 0x00ff00, 0x0000ff  # Cores dos pontos do cluster 0
     
 
     jal mainSingleCluster
+    jal cleanScreen
+    jal printClusters
 
     # Descomentar na 2a parte do projeto:
     #jal mainKMeans
