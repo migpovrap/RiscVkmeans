@@ -159,8 +159,8 @@ printClusters:
     k1:
         slli t0 s0 3
         add t1 s1 t0
-        lw a1 0(t1)
-        lw a0 4(t1)
+        lw a0 0(t1)
+        lw a1 4(t1)
         la t3 colors
         lw a2 4(t3)
         addi sp sp -12
