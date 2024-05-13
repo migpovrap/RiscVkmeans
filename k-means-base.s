@@ -197,7 +197,13 @@ printCentroids:
 # Retorno: nenhum
 
 calculateCentroids:
-    # POR IMPLEMENTAR (1a e 2a parte)
+    li t0 1
+    lw t1 k
+    bne t1 t0 kmaior1
+    #k1:
+    
+   # kmaior1:
+    # POR IMPLEMENTAR (2a parte)
     jr ra
 
 
