@@ -75,6 +75,8 @@ colors:      .word 0xff0000, 0x00ff00, 0x0000ff  # Cores dos pontos do cluster 0
     # Chama funcao principal da 1a parte do projeto
     #jal mainSingleCluster
 
+    jal cleanScreen
+
     jal printClusters
     
 
@@ -98,16 +100,6 @@ colors:      .word 0xff0000, 0x00ff00, 0x0000ff  # Cores dos pontos do cluster 0
 # a2: cor
 
 printPoint:
-
-    la t0 printedleds
-    la t1 nprintleds
-    lw t2 0(t1)
-    addi t2 t2 1
-    sw t2 0(t1)
-    slli t2 t2 3
-    add t0 t0 t2
-    sw a0 0(t0)
-    sw a1 4(t0)
     
     li a3, LED_MATRIX_0_HEIGHT
     sub a1, a3, a1
@@ -128,29 +120,30 @@ printPoint:
 # Retorno: nenhum
 
 cleanScreen:
-    la t1 nprintleds    
-    lw t2 0(t1)
-    loop:
-        la t0 printedleds
-        slli t3 t2 3
-        add t0 t0 t3
-        lw a0 0(t0)
-        lw a1 4(t0)
-        li a2 black
-        addi sp sp -12
-        sw t1 0(sp)
-        sw t2 4(sp)
-        sw ra 8(sp)
-        jal printPoint
-        lw t1 0(sp)
-        lw t2 4(sp)
-        lw ra 8(sp)
-        addi sp sp 12
-        addi t2 t2 -1
-        bgtz t2 loop
-    sw t2 0(t1)
+    li a2 black
+    li a0 32
+    addi sp sp -4
+    sw ra 0(sp)
+        ledxloop:
+            li a1 32
+        
+            ledyloop:
+                addi sp sp -8
+                sw a0 0(sp)
+                sw a1 4(sp)
+                jal printPoint
+                lw a0 0(sp)
+                lw a1 4(sp)
+                addi sp sp 8
+                addi a1 a1 -1
+                bgez a1 ledyloop
+        
+            addi a0 a0 -1
+            bgtz a0 ledxloop
+            
+    lw ra 0(sp)
+    addi sp sp 4
     jr ra
-
     
 ### printClusters
 # Pinta os agrupamentos na LED matrix com a cor correspondente.
