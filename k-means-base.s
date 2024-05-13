@@ -120,7 +120,7 @@ printPoint:
 # Retorno: nenhum
 
 cleanScreen:
-    li a2 black
+    li a2 white
     li a0 32
     addi sp sp -4
     sw ra 0(sp)
