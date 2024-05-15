@@ -190,10 +190,10 @@ printClusters:
 
 printCentroids:
     lw t0 k 
-    addi t0 t0 -1 #Temp inverter o loop
-    addi sp sp -4
+    addi t0 t0 -1 #Decrementa o n de pontos de modo a coincidir com o indice do array
+    addi sp sp -4 #Guarda o return adress na stack (decrementa o stack pointer)
     sw ra 0(sp)
-    printloop:
+    printloop: #Loop para percorrer o vetor centroids e chamar o printPoints para cada coordenada
         addi sp sp -4
         sw t0 0(sp)
         la t1 centroids
@@ -201,13 +201,13 @@ printCentroids:
         add t1 t1 t0
         lw a0 0(t1)
         lw a1 4(t1)
-        li a2 black
+        li a2 black #Define a cor usada para fazer o print dos centroides
         jal printPoint
         lw t0 0(sp)
         addi sp sp 4
         addi t0 t0 -1
         bgez t0 printloop
-    lw ra 0(sp)
+    lw ra 0(sp) #Carrega o return adress da stack (restaura a posição do stack pointer)
     addi sp sp 4
     jr ra
     
