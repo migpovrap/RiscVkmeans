@@ -137,10 +137,10 @@ cleanScreen:
                 lw a1 4(sp) # Carrega a coordenada y para a1
                 addi sp sp 8
                 addi a1 a1 -1
-                bgez a1 ledyloop # Verifica se pintou o último ponto
+                bgez a1 ledyloop # Verifica se pintou o ï¿½ltimo ponto
         
             addi a0 a0 -1
-            bgtz a0 ledxloop # Verifica se pintou o último ponto
+            bgtz a0 ledxloop # Verifica se pintou o ï¿½ltimo ponto
             
     lw ra 0(sp)
     addi sp sp 4
@@ -154,24 +154,24 @@ cleanScreen:
 printClusters:
     li t0 1 # Carrega o valor 1 para t0
     lw t1 k # Carrega k para t1
-    la s1 points # Carrega o endereço do vetor points para s1
-    lw s0 n_points # Carrega número de pontos no vetor para s0
+    la s1 points # Carrega o endereï¿½o do vetor points para s1
+    lw s0 n_points # Carrega nï¿½mero de pontos no vetor para s0
     addi s0 s0 -1 #Temp inverter o loop
-    bne t1 t0 kmaior1pc # Verifica se k é maior ou igual a 1
+    bne t1 t0 kmaior1pc # Verifica se k ï¿½ maior ou igual a 1
     k1pc:
-        slli t0 s0 3 # Carrega o endereço do último ponto do vetor para t1
+        slli t0 s0 3 # Carrega o endereï¿½o do ï¿½ltimo ponto do vetor para t1
         add t1 s1 t0
         lw a0 0(t1) # Carrega a coordenada x para a0
         lw a1 4(t1) # Carrega a coordenada y para a1
-        la t3 colors # Carrega o endereço das cores para t3
+        la t3 colors # Carrega o endereï¿½o das cores para t3
         lw a2 4(t3) # Carrega a cor para a2
         addi sp sp -12 
         sw a0 0(sp) # Salvaguarda coordenada x
-        sw s0 4(sp) # Salvaguarda número de pontos do vetor
+        sw s0 4(sp) # Salvaguarda nï¿½mero de pontos do vetor
         sw ra 8(sp)
         jal printPoint # Pinta o ponto (x,y) de branco
         lw a0 0(sp) # Carrega coordenada x para a0
-        lw s0 4(sp) # Salvaguarda número de pontos do vetor para s0
+        lw s0 4(sp) # Salvaguarda nï¿½mero de pontos do vetor para s0
         lw ra 8(sp)
         addi sp sp 12
         addi s0 s0 -1
