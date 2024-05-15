@@ -156,6 +156,7 @@ printClusters:
     lw t1 k
     la s1 points
     lw s0 n_points
+    addi s0 s0 -1 #Temp inverter o loop
     bne t1 t0 kmaior1pc
     k1pc:
         slli t0 s0 3
@@ -189,6 +190,7 @@ printClusters:
 
 printCentroids:
     lw t0 k 
+    addi t0 t0 -1 #Temp inverter o loop
     addi sp sp -4
     sw ra 0(sp)
     printloop:
@@ -218,11 +220,12 @@ printCentroids:
 calculateCentroids:
     li t0 1
     lw t1 k
-    bne t1 t0 kmaior1cc
     addi sp sp -4
     sw ra 0(sp)
+    bne t1 t0 kmaior1cc
     k1cc:
-        lw t1 n_points
+        lw t1 n_points #Temp inverter o loop
+        addi t1 t1 -1
         li s1 0
         li s2 0
         k1loop:
