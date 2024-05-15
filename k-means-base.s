@@ -5,8 +5,8 @@
 # Campus: TagusPark
 #
 # Autores:
-# 110126, AntÃ³nio HernÃ¢ni Rebelo de Carvalho Correia
-# 109686, Miguel PÃ³voa Raposo
+# 110126, Ant?nio Hern?ni Rebelo de Carvalho Correia
+# 109686, Miguel P?voa Raposo
 # 110286, Pedro Miguel Ledo Santos Nazareth
 #
 # Tecnico/ULisboa
@@ -103,44 +103,44 @@ colors:      .word 0xff0000, 0x00ff00, 0x0000ff  # Cores dos pontos do cluster 0
 printPoint:
     
     li a3, LED_MATRIX_0_HEIGHT
-    sub a1, a3, a1
+    sub a1, a3, a1 
     addi a1, a1, -1
     li a3, LED_MATRIX_0_WIDTH
     mul a3, a3, a1
     add a3, a3, a0
     slli a3, a3, 2
-    li a0, LED_MATRIX_0_BASE
+    li a0, LED_MATRIX_0_BASE 
     add a3, a3, a0   # addr
     sw a2, 0(a3)
     jr ra
     
 
 ### cleanScreen
-# Limpa todos os pontos do ecrÃ£
+# Limpa todos os pontos do ecr?
 # Argumentos: nenhum
 # Retorno: nenhum
 
 cleanScreen:
-    li a2 white
-    li a0 32
+    li a2 white # Carrega a cor branca para a2
+    li a0 32 # Carrega o tamanho da LED matrix para a0
     addi sp sp -4
     sw ra 0(sp)
         ledxloop:
-            li a1 32
+            li a1 32 # Carrega o tamanho da LED matrix para a1
         
             ledyloop:
                 addi sp sp -8
-                sw a0 0(sp)
-                sw a1 4(sp)
-                jal printPoint
-                lw a0 0(sp)
-                lw a1 4(sp)
+                sw a0 0(sp) # Salvaguarda coordenada x 
+                sw a1 4(sp) # Salvaguarda coordenada y
+                jal printPoint # Pinta o ponto (x,y) de branco
+                lw a0 0(sp) # Carrega a coordenada x para a0
+                lw a1 4(sp) # Carrega a coordenada y para a1
                 addi sp sp 8
                 addi a1 a1 -1
-                bgez a1 ledyloop
+                bgez a1 ledyloop # Verifica se pintou o último ponto
         
             addi a0 a0 -1
-            bgtz a0 ledxloop
+            bgtz a0 ledxloop # Verifica se pintou o último ponto
             
     lw ra 0(sp)
     addi sp sp 4
@@ -152,26 +152,26 @@ cleanScreen:
 # Retorno: nenhum
 
 printClusters:
-    li t0 1
-    lw t1 k
-    la s1 points
-    lw s0 n_points
+    li t0 1 # Carrega o valor 1 para t0
+    lw t1 k # Carrega k para t1
+    la s1 points # Carrega o endereço do vetor points para s1
+    lw s0 n_points # Carrega número de pontos no vetor para s0
     addi s0 s0 -1 #Temp inverter o loop
-    bne t1 t0 kmaior1pc
+    bne t1 t0 kmaior1pc # Verifica se k é maior ou igual a 1
     k1pc:
-        slli t0 s0 3
+        slli t0 s0 3 # Carrega o endereço do último ponto do vetor para t1
         add t1 s1 t0
-        lw a0 0(t1)
-        lw a1 4(t1)
-        la t3 colors
-        lw a2 4(t3)
-        addi sp sp -12
-        sw a0 0(sp)
-        sw s0 4(sp)
+        lw a0 0(t1) # Carrega a coordenada x para a0
+        lw a1 4(t1) # Carrega a coordenada y para a1
+        la t3 colors # Carrega o endereço das cores para t3
+        lw a2 4(t3) # Carrega a cor para a2
+        addi sp sp -12 
+        sw a0 0(sp) # Salvaguarda coordenada x
+        sw s0 4(sp) # Salvaguarda número de pontos do vetor
         sw ra 8(sp)
-        jal printPoint
-        lw a0 0(sp)
-        lw s0 4(sp)
+        jal printPoint # Pinta o ponto (x,y) de branco
+        lw a0 0(sp) # Carrega coordenada x para a0
+        lw s0 4(sp) # Salvaguarda número de pontos do vetor para s0
         lw ra 8(sp)
         addi sp sp 12
         addi s0 s0 -1
