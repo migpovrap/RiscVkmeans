@@ -220,15 +220,15 @@ printCentroids:
 calculateCentroids:
     li t0 1
     lw t1 k
-    addi sp sp -4
+    addi sp sp -4 #Guarda o return adress na stack (decrementa o stack pointer)
     sw ra 0(sp)
-    bne t1 t0 kmaior1cc
+    bne t1 t0 kmaior1cc #Verifica se estamos me k= ou k>1
     k1cc:
-        lw t1 n_points #Temp inverter o loop
-        addi t1 t1 -1
-        li s1 0
+        lw t1 n_points 
+        addi t1 t1 -1 #Decrementa o n de pontos de modo a coincidir com o indice do array
+        li s1 0 #Inicializa a zero os acumuladores da soma para a média
         li s2 0
-        k1loop:
+        k1loop: #Loop para somar todos os pontos x (no s1) e y (no s2)
             la a0 points
             slli t2 t1 3
             add a0 a0 t2
@@ -239,15 +239,15 @@ calculateCentroids:
             addi t1 t1 -1
             bgez t1 k1loop
         lw t1 n_points
-        div s1 s1 t1
+        div s1 s1 t1 #Calcula a média das coordenadas
         div s2 s2 t1
-        la a0 centroids
-        sw s1 0(a0)
+        la a0 centroids #Guarada as coordenadas médias na posição 0 do vetor centroids (para k=1)
+        sw s1 0(a0) 
         sw s2 4(a0)
     
     kmaior1cc:
     # POR IMPLEMENTAR (2a parte)
-    lw ra 0(sp)
+    lw ra 0(sp) #Carrega o return adress da stack (restaura a posição do stack pointer)
     addi sp sp 4
     jr ra
 
