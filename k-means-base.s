@@ -205,7 +205,6 @@ printCentroids:
         addi sp sp 4
         addi t0 t0 -1
         bgez t0 printloop
-    # POR IMPLEMENTAR (1a e 2a parte)
     lw ra 0(sp)
     addi sp sp 4
     jr ra
