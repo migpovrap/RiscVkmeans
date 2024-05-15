@@ -288,7 +288,17 @@ mainSingleCluster:
 # a0: distance
 
 manhattanDistance:
-    # POR IMPLEMENTAR (2a parte)
+    sub t0 a0 a2 # (x1-x2)
+    sub t1 a1 a3 # (y1-y2)
+
+    bgtz t0 x
+    neg t0 t0
+    x:
+        bgtz t1 fim
+        neg t1 t1
+    
+    fim:
+        add a0 t0 t1
     jr ra
 
 
