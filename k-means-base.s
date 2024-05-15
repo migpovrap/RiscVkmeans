@@ -220,10 +220,32 @@ calculateCentroids:
     li t0 1
     lw t1 k
     bne t1 t0 kmaior1
-    #k1:
-    
-   # kmaior1:
+    addi sp sp -4
+    sw ra 0(sp)
+    k1:
+        lw t1 n_points
+        li s1 0
+        li s2 0
+        k1loop:
+            la a0 points
+            slli t2 t1 3
+            add a0 a0 t2
+            lw t2 0(a0)
+            lw t3 4(a0)
+            add s1 s1 t2
+            add s2 s2 t3
+            addi t1 t1 -1
+            bgez t1 k1loop
+        div s1 s1 t1
+        div s2 s2 t1
+        la a0 centroids
+        sw s1 0(a0)
+        sw s2 4(a0)
+
+    kmaior1:
     # POR IMPLEMENTAR (2a parte)
+    lw ra 0(sp)
+    addi sp sp 4
     jr ra
 
 
