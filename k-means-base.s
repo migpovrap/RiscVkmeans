@@ -47,7 +47,7 @@ centroids:   .word 0,0
 k:           .word 1
 
 # Valores de centroids, k e L a usar na 2a parte do prejeto:
-#centroids:   .word 0,0, 10,0, 0,10
+#centroids:   .word 0,0, 10,0, 0,10 #O indice do centroide corresponde ao do culster (0, k-1)
 #k:           .word 3
 #L:           .word 10
 
@@ -310,7 +310,36 @@ manhattanDistance:
 # a0: cluster index
 
 nearestCluster:
-    # POR IMPLEMENTAR (2a parte)
+   lw t1 k
+   li s1 46 #Maior distancia possivel numa matriz 32x32
+   addi t1 t1 -1
+   loopcentroids:
+        la t0 centroids
+        slli t2 t1 3
+        add t2 t0 t2
+        lw a2 0(t2)
+        lw a3 4(t2)
+        addi sp sp -16
+        sw ra 0(sp)
+        sw t1 4(sp)
+        sw a0 8(sp)
+        sw a1 12(sp)
+        jal manhattanDistance
+        add t3 a0 zero
+        lw ra 0(sp)
+        lw t1 4(sp)
+        lw a0 8(sp)
+        lw a1 12(sp)  
+        addi sp sp 16
+        
+        bgt t3 s1 next
+        add s1 t3 zero
+        add s2 t1 zero
+        next:
+            addi t1 t1 -1
+            bgez t1 loopcentroids
+
+    add a0 s2 zero
     jr ra
 
 
