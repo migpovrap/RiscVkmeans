@@ -156,8 +156,8 @@ printClusters:
     lw t1 k
     la s1 points
     lw s0 n_points
-    bne t1 t0 kmaior1
-    k1:
+    bne t1 t0 kmaior1pc
+    k1pc:
         slli t0 s0 3
         add t1 s1 t0
         lw a0 0(t1)
@@ -174,9 +174,9 @@ printClusters:
         lw ra 8(sp)
         addi sp sp 12
         addi s0 s0 -1
-        bgtz s0 k1
+        bgtz s0 k1pc
 
-    kmaior1:
+    kmaior1pc:
     # POR IMPLEMENTAR (2a parte)
     jr ra
 
@@ -219,10 +219,10 @@ printCentroids:
 calculateCentroids:
     li t0 1
     lw t1 k
-    bne t1 t0 kmaior1
+    bne t1 t0 kmaior1cc
     addi sp sp -4
     sw ra 0(sp)
-    k1:
+    k1cc:
         lw t1 n_points
         li s1 0
         li s2 0
@@ -242,7 +242,7 @@ calculateCentroids:
         sw s1 0(a0)
         sw s2 4(a0)
 
-    kmaior1:
+    kmaior1cc:
     # POR IMPLEMENTAR (2a parte)
     lw ra 0(sp)
     addi sp sp 4
@@ -258,21 +258,16 @@ mainSingleCluster:
     addi sp sp -4
     sw ra 0(sp)
     #1. Coloca k=1 (caso nao esteja a 1)
-    # POR IMPLEMENTAR (1a parte)
     la a0 k
     li t0 1
     sw t0 0(a0)
     #2. cleanScreen
-    # POR IMPLEMENTAR (1a parte)
     jal cleanScreen
     #3. printClusters
-    # POR IMPLEMENTAR (1a parte)
     jal printClusters
     #4. calculateCentroids
-    # POR IMPLEMENTAR (1a parte)
     jal calculateCentroids
     #5. printCentroids
-    # POR IMPLEMENTAR (1a parte)
     jal printCentroids
     #6. Termina
     lw ra 0(sp)
