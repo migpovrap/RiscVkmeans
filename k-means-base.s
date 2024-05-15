@@ -255,23 +255,28 @@ calculateCentroids:
 # Retorno: nenhum
 
 mainSingleCluster:
-
+    addi sp sp -4
+    sw ra 0(sp)
     #1. Coloca k=1 (caso nao esteja a 1)
     # POR IMPLEMENTAR (1a parte)
-
+    la a0 k
+    li t0 1
+    sw t0 0(a0)
     #2. cleanScreen
     # POR IMPLEMENTAR (1a parte)
-
+    jal cleanScreen
     #3. printClusters
     # POR IMPLEMENTAR (1a parte)
-
+    jal printClusters
     #4. calculateCentroids
     # POR IMPLEMENTAR (1a parte)
-
+    jal calculateCentroids
     #5. printCentroids
     # POR IMPLEMENTAR (1a parte)
-
+    jal printCentroids
     #6. Termina
+    lw ra 0(sp)
+    addi sp sp 4
     jr ra
 
 
