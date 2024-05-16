@@ -5,8 +5,8 @@
 # Campus: TagusPark
 #
 # Autores:
-# 110126, Ant?nio Hern?ni Rebelo de Carvalho Correia
-# 109686, Miguel P?voa Raposo
+# 110126, António Hernani Rebelo de Carvalho Correia
+# 109686, Miguel Póvoa Raposo
 # 110286, Pedro Miguel Ledo Santos Nazareth
 #
 # Tecnico/ULisboa
@@ -331,7 +331,7 @@ nearestCluster:
         lw a0 8(sp)
         lw a1 12(sp)  
         addi sp sp 16
-        
+
         bgt t3 s1 next
         add s1 t3 zero
         add s2 t1 zero
