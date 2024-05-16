@@ -164,7 +164,7 @@ printClusters:
         lw a0 0(t1) # Carrega a coordenada x para a0
         lw a1 4(t1) # Carrega a coordenada y para a1
         la t3 colors # Carrega o endereco das cores para t3
-        lw a2 4(t3) # Carrega a cor para a2
+        lw a2 0(t3) # Carrega a cor para a2 (vermelho)
         addi sp sp -12
         sw s1 0(sp) # Salvaguarda endereco do vetor points
         sw s0 4(sp) # Salvaguarda numero de pontos do vetor
