@@ -55,7 +55,11 @@ k:           .word 1
 # que o grupo considere necessarias para a solucao:
 #clusters:    
 
-
+#Dados usados no algoritmo LCG para gerar numeros pseudo aleatorios
+seed:       .word 12345        # Valor da seed
+a:          .word 1664525      # Numero alatorio para multiplicar
+c:          .word 1013904223   # Incremento
+m:          .word 32           # Valor maximo gerar entre 0 e 32
 
 
 #Definicoes de cores a usar no projeto 
@@ -342,6 +346,59 @@ nearestCluster:
     add a0 s2 zero
     jr ra
 
+### randomgencord
+#Gera um par de coordenadas aleatórias
+# Argumentos: nenhum
+# Retorno:
+# s0: x
+# s1: y
+
+randomgencord:
+    lw t0 seed
+    lw t1 a
+    lw t2 c
+    lw t3 m
+
+    mul t5 t0 t1
+    add t5 t5 t2
+    rem t0 t5 t3
+
+    add s0 t0 zero
+
+    lw t0 seed
+    lw t1 a
+    lw t2 c
+    lw t3 m
+
+    mul t5 t0 t1
+    add t5 t5 t2
+    rem t0 t5 t3
+
+    add s1 t0 zero
+    jr ra
+
+initializeCentroids:
+    la t0 centroids
+    lw t1 k
+    loopgencord:
+        addi sp sp -12
+        sw t0 0(sp)
+        sw t1 4(sp)
+        sw ra 8(sp) #Guarda o endereço de retorno
+        jal randomgencord
+        lw t0 0(sp)
+        lw t1 4(sp)
+        lw ra 8(sp) #Restaura o endereço de retorno
+        addi sp sp 12
+
+        slli t2 t1 3 
+        add t3 t0 t2
+        sw s0 0(t3)
+        sw s1 4(t3)
+
+        addi t1 t1 -1
+        bgez t1 loopgencord
+    jr ra
 
 ### mainKMeans
 # Executa o algoritmo *k-means*.
