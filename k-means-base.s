@@ -28,32 +28,37 @@
 #n_points:    .word 9
 #points:      .word 0,0, 1,1, 2,2, 3,3, 4,4, 5,5, 6,6, 7,7 8,8
 
+
 #Input B - Cruz
 n_points:    .word 5
 points:     .word 4,2, 5,1, 5,2, 5,3 6,2
 
+
 #Input C
 #n_points:    .word 23
 #points: .word 0,0, 0,1, 0,2, 1,0, 1,1, 1,2, 1,3, 2,0, 2,1, 5,3, 6,2, 6,3, 6,4, 7,2, 7,3, 6,8, 6,9, 7,8, 8,7, 8,8, 8,9, 9,7, 9,8
+
 
 #Input D
 #n_points:    .word 30
 #points:      .word 16, 1, 17, 2, 18, 6, 20, 3, 21, 1, 17, 4, 21, 7, 16, 4, 21, 6, 19, 6, 4, 24, 6, 24, 8, 23, 6, 26, 6, 26, 6, 23, 8, 25, 7, 26, 7, 20, 4, 21, 4, 10, 2, 10, 3, 11, 2, 12, 4, 13, 4, 9, 4, 9, 3, 8, 0, 10, 4, 10
 
 
-
 # Valores de centroids e k a usar na 1a parte do projeto:
 centroids:   .word 0,0
 k:           .word 1
+
 
 # Valores de centroids, k e L a usar na 2a parte do prejeto:
 #centroids:   .word 0,0, 10,0, 0,10 #O indice do centroide corresponde ao do culster (0, k-1)
 #k:           .word 3
 #L:           .word 10
 
+
 # Abaixo devem ser declarados o vetor clusters (2a parte) e outras estruturas de dados
 # que o grupo considere necessarias para a solucao:
 #clusters:    
+
 
 #Dados usados no algoritmo LCG para gerar numeros pseudo aleatorios
 seed:       .word 12345        # Valor da seed
@@ -125,26 +130,26 @@ printPoint:
 # Retorno: nenhum
 
 cleanScreen:
-    li a2 white # Carrega a cor branca para a2
-    li a0 32 # Carrega o tamanho da LED matrix para a0
+    li a2 white                     # Carrega a cor branca para a2
+    li a0 32                        # Carrega o tamanho da LED matrix para a0
     addi sp sp -4
     sw ra 0(sp)
         ledxloop:
-            li a1 32 # Carrega o tamanho da LED matrix para a1
+            li a1 32                # Carrega o tamanho da LED matrix para a1
         
             ledyloop:
                 addi sp sp -8
-                sw a0 0(sp) # Salvaguarda coordenada x 
-                sw a1 4(sp) # Salvaguarda coordenada y
-                jal printPoint # Pinta o ponto (x,y) de branco
-                lw a0 0(sp) # Carrega a coordenada x para a0
-                lw a1 4(sp) # Carrega a coordenada y para a1
+                sw a0 0(sp)         # Salvaguarda coordenada x 
+                sw a1 4(sp)         # Salvaguarda coordenada y
+                jal printPoint      # Pinta o ponto (x,y) de branco
+                lw a0 0(sp)         # Carrega a coordenada x para a0
+                lw a1 4(sp)         # Carrega a coordenada y para a1
                 addi sp sp 8
                 addi a1 a1 -1
-                bgez a1 ledyloop # Verifica se pintou o ultimo ponto
+                bgez a1 ledyloop    # Verifica se pintou o ultimo ponto
         
             addi a0 a0 -1
-            bgtz a0 ledxloop # Verifica se pintou o ultimo ponto
+            bgtz a0 ledxloop        # Verifica se pintou o ultimo ponto
             
     lw ra 0(sp)
     addi sp sp 4
@@ -156,26 +161,26 @@ cleanScreen:
 # Retorno: nenhum
 
 printClusters:
-    li t0 1 # Carrega o valor 1 para t0
-    lw t1 k # Carrega k para t1
-    la s1 points # Carrega o endereco do vetor points para s1
-    lw s0 n_points # Carrega numero de pontos no vetor para s0
-    addi s0 s0 -1 #Temp inverter o loop
-    bne t1 t0 kmaior1pc # Verifica se k e maior ou igual a 1
+    li t0 1                         # Carrega o valor 1 para t0
+    lw t1 k                         # Carrega k para t1
+    la s1 points                    # Carrega o endereco do vetor points para s1
+    lw s0 n_points                  # Carrega numero de pontos no vetor para s0
+    addi s0 s0 -1                   # Temp inverter o loop
+    bne t1 t0 kmaior1pc             # Verifica se k e maior ou igual a 1
     k1pc:
-        slli t0 s0 3 # Carrega o endereco do ultimo ponto do vetor para t1
+        slli t0 s0 3                # Carrega o endereco do ultimo ponto do vetor para t1
         add t1 s1 t0
-        lw a0 0(t1) # Carrega a coordenada x para a0
-        lw a1 4(t1) # Carrega a coordenada y para a1
-        la t3 colors # Carrega o endereco das cores para t3
-        lw a2 0(t3) # Carrega a cor para a2 (vermelho)
+        lw a0 0(t1)                 # Carrega a coordenada x para a0
+        lw a1 4(t1)                 # Carrega a coordenada y para a1
+        la t3 colors                # Carrega o endereco das cores para t3
+        lw a2 0(t3)                 # Carrega a cor para a2 (vermelho)
         addi sp sp -12
-        sw s1 0(sp) # Salvaguarda endereco do vetor points
-        sw s0 4(sp) # Salvaguarda numero de pontos do vetor
+        sw s1 0(sp)                 # Salvaguarda endereco do vetor points
+        sw s0 4(sp)                 # Salvaguarda numero de pontos do vetor
         sw ra 8(sp)
-        jal printPoint # Pinta o ponto (x,y) de branco
-        lw s1 0(sp) # Carrega coordenada x para a0
-        lw s0 4(sp) # Salvaguarda numero de pontos do vetor para s0
+        jal printPoint              # Pinta o ponto (x,y) de branco
+        lw s1 0(sp)                 # Carrega coordenada x para a0
+        lw s0 4(sp)                 # Salvaguarda numero de pontos do vetor para s0
         lw ra 8(sp)
         addi sp sp 12
         addi s0 s0 -1
@@ -194,10 +199,10 @@ printClusters:
 
 printCentroids:
     lw t0 k 
-    addi t0 t0 -1 #Decrementa o n de pontos de modo a coincidir com o indice do array
-    addi sp sp -4 #Guarda o return adress na stack (decrementa o stack pointer)
+    addi t0 t0 -1                   # Decrementa o n de pontos de modo a coincidir com o indice do array
+    addi sp sp -4                   # Guarda o return adress na stack (decrementa o stack pointer)
     sw ra 0(sp)
-    printloop: #Loop para percorrer o vetor centroids e chamar o printPoints para cada coordenada
+    printloop:                      # Loop para percorrer o vetor centroids e chamar o printPoints para cada coordenada
         addi sp sp -4
         sw t0 0(sp)
         la t1 centroids
@@ -205,13 +210,13 @@ printCentroids:
         add t1 t1 t0
         lw a0 0(t1)
         lw a1 4(t1)
-        li a2 black #Define a cor usada para fazer o print dos centroides
+        li a2 black                 # Define a cor usada para fazer o print dos centroides
         jal printPoint
         lw t0 0(sp)
         addi sp sp 4
         addi t0 t0 -1
         bgez t0 printloop
-    lw ra 0(sp) #Carrega o return adress da stack (restaura a posição do stack pointer)
+    lw ra 0(sp)                     # Carrega o return adress da stack (restaura a posição do stack pointer)
     addi sp sp 4
     jr ra
     
@@ -224,15 +229,15 @@ printCentroids:
 calculateCentroids:
     li t0 1
     lw t1 k
-    addi sp sp -4 #Guarda o return adress na stack (decrementa o stack pointer)
+    addi sp sp -4                  # Guarda o return adress na stack (decrementa o stack pointer)
     sw ra 0(sp)
-    bne t1 t0 kmaior1cc #Verifica se estamos me k= ou k>1
+    bne t1 t0 kmaior1cc            # Verifica se estamos me k= ou k>1
     k1cc:
         lw t1 n_points 
-        addi t1 t1 -1 #Decrementa o n de pontos de modo a coincidir com o indice do array
-        li s1 0 #Inicializa a zero os acumuladores da soma para a média
+        addi t1 t1 -1              # Decrementa o n de pontos de modo a coincidir com o indice do array
+        li s1 0                    # Inicializa a zero os acumuladores da soma para a média
         li s2 0
-        k1loop: #Loop para somar todos os pontos x (no s1) e y (no s2)
+        k1loop:                    # Loop para somar todos os pontos x (no s1) e y (no s2)
             la a0 points
             slli t2 t1 3
             add a0 a0 t2
@@ -243,15 +248,15 @@ calculateCentroids:
             addi t1 t1 -1
             bgez t1 k1loop
         lw t1 n_points
-        div s1 s1 t1 #Calcula a média das coordenadas
+        div s1 s1 t1               # Calcula a média das coordenadas
         div s2 s2 t1
-        la a0 centroids #Guarada as coordenadas médias na posição 0 do vetor centroids (para k=1)
+        la a0 centroids            # Guarada as coordenadas médias na posição 0 do vetor centroids (para k=1)
         sw s1 0(a0) 
         sw s2 4(a0)
     
     kmaior1cc:
     # POR IMPLEMENTAR (2a parte)
-    lw ra 0(sp) #Carrega o return adress da stack (restaura a posição do stack pointer)
+    lw ra 0(sp)                    # Carrega o return adress da stack (restaura a posição do stack pointer)
     addi sp sp 4
     jr ra
 
@@ -404,25 +409,25 @@ randomgencord:
 initializeCentroids:
     la t0 centroids
     lw t1 k
-    addi t1 t1 -1
+    addi t1 t1 -1               # Decrementa o K para contar de forma correta de 0-2 (0,1,2) em vez de (0,1,2,3)
     loopgencord:
-        addi sp sp -12
+        addi sp sp -12          # Abre espaco na stack para guardar registros temp necessarios para esta funcao 
         sw t0 0(sp)
         sw t1 4(sp)
-        sw ra 8(sp) #Guarda o endereço de retorno
-        jal randomgencord
+        sw ra 8(sp)             # Guarda o endereço de retorno
+        jal randomgencord       # Chama a funcao random que devolve no s0 e s1 duas cordenadas aleatorias
         lw t0 0(sp)
         lw t1 4(sp)
-        lw ra 8(sp) #Restaura o endereço de retorno
+        lw ra 8(sp)             # Restaura o endereço de retorno
         addi sp sp 12
 
-        slli t2 t1 3 
-        add t3 t0 t2
-        sw s0 0(t3)
-        sw s1 4(t3)
+        slli t2 t1 3            # Bitshift usado para calcular o offset usado para guardar dados no vetor centroids
+        add t3 t0 t2            # Adiciona ao endereco base de centroids o offset necesario
+        sw s0 0(t3)             # Guarda o s0 cordenada X no vetor centroids na posicao correta
+        sw s1 4(t3)             # Guarda o s1 cordenada Y no vetor centroids na posicao correta
 
-        addi t1 t1 -1
-        bgez t1 loopgencord
+        addi t1 t1 -1           # Decrementa o contador K numero de centroids
+        bgez t1 loopgencord     # Jump para o inicio caso ainda nao seja menor que zero
     jr ra
 
 
