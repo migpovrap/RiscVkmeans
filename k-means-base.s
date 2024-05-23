@@ -30,8 +30,8 @@
 
 
 #Input B - Cruz
-n_points:    .word 5
-points:     .word 4,2, 5,1, 5,2, 5,3 6,2
+#n_points:    .word 5
+#points:     .word 4,2, 5,1, 5,2, 5,3 6,2
 
 
 #Input C
@@ -40,24 +40,24 @@ points:     .word 4,2, 5,1, 5,2, 5,3 6,2
 
 
 #Input D
-#n_points:    .word 30
-#points:      .word 16, 1, 17, 2, 18, 6, 20, 3, 21, 1, 17, 4, 21, 7, 16, 4, 21, 6, 19, 6, 4, 24, 6, 24, 8, 23, 6, 26, 6, 26, 6, 23, 8, 25, 7, 26, 7, 20, 4, 21, 4, 10, 2, 10, 3, 11, 2, 12, 4, 13, 4, 9, 4, 9, 3, 8, 0, 10, 4, 10
+n_points:    .word 30
+points:      .word 16, 1, 17, 2, 18, 6, 20, 3, 21, 1, 17, 4, 21, 7, 16, 4, 21, 6, 19, 6, 4, 24, 6, 24, 8, 23, 6, 26, 6, 26, 6, 23, 8, 25, 7, 26, 7, 20, 4, 21, 4, 10, 2, 10, 3, 11, 2, 12, 4, 13, 4, 9, 4, 9, 3, 8, 0, 10, 4, 10
 
 
 # Valores de centroids e k a usar na 1a parte do projeto:
-centroids:   .word 0,0
-k:           .word 1
+#centroids:   .word 0,0
+#k:           .word 1
 
 
 # Valores de centroids, k e L a usar na 2a parte do prejeto:
-#centroids:   .word 0,0, 10,0, 0,10 #O indice do centroide corresponde ao do culster (0, k-1)
-#k:           .word 3
-#L:           .word 10
+centroids:   .word 0,0, 10,0, 0,10 #O indice do centroide corresponde ao do culster (0, k-1)
+k:           .word 3
+L:           .word 10
 
 
 # Abaixo devem ser declarados o vetor clusters (2a parte) e outras estruturas de dados
 # que o grupo considere necessarias para a solucao:
-clusters:   .zero  
+clusters:   .zero  16384
 
 
 #Dados usados no algoritmo LCG para gerar numeros pseudo aleatorios
@@ -432,7 +432,45 @@ initializeCentroids:
 
 
 generatevectorcluster:
+    
+    addi sp sp -4
+    sw ra 0(sp)
+    jal initializeCentroids
+    lw ra 0(sp)
+    addi sp sp 4
 
+    li t2 0
+    genloopvc:
+        la t1 points
+        slli t3 t2 3
+        add t3 t1 t3
+        lw a0 0(t3)
+        lw a1 4(t3)
+        addi sp sp -12
+        sw t2 0(sp)
+        sw ra 4(sp)
+        sw t3 8(sp)
+        jal nearestCluster
+        lw t2 0(sp)
+        lw ra 4(sp)
+        lw t3 8(sp)
+        addi sp sp 12
+
+        lw a1 0(t3)
+        lw a2 4(t3)
+
+        la t0 clusters
+        slli t3 t2 4
+        add t3 t0 t3
+        sw a0 0(t3)
+        sw a1 4(t3)
+        sw a2 8(t3)
+        
+        addi t2 t2 1
+        lw t0 n_points
+        blt t2 t0 genloopvc
+
+    jr ra
 
 
 ### mainKMeans
@@ -442,17 +480,25 @@ generatevectorcluster:
 
 mainKMeans:  
     # POR IMPLEMENTAR (2a parte)
-    cleanScreen
-    initializeCentroids(gera vetor clsuter)
-    nearestCLuster
-    printClusters
-    printCentroids
+    addi sp sp -4
+    sw ra 0(sp)
+    jal cleanScreen
+    jal initializeCentroids
+    jal generatevectorcluster
+    jal printCentroids
+    #(gera vetor clsuter)
+    #nearestCLuster
+    #printClusters
+    #printCentroids
 
-    Este bloco é excutado L vezes
-        cleanScreen
-        calculateCentroids
-        nearestCLuster
-        printClusters
-        printCentroids
 
+    #Este bloco é excutado L vezes
+        #cleanScreen
+        #calculateCentroids
+        #nearestCLuster
+        #printClusters
+        #printCentroids
+
+    lw ra 0(sp)
+    addi sp sp 4
     jr ra
