@@ -282,10 +282,48 @@ calculateCentroids:
         la a0 centroids            # Guarada as coordenadas m�dias na posi��o 0 do vetor centroids (para k=1)
         sw s1 0(a0) 
         sw s2 4(a0)
-    
+
+    lw ra 0(sp)
+    addi sp sp 4
+    jr ra
+
     kmaior1cc:
-    # POR IMPLEMENTAR (2a parte)
-    lw ra 0(sp)                    # Carrega o return adress da stack (restaura a posi��o do stack pointer)
+        lw s1 k
+        addi s1 s1 -1
+        loopkcluster:
+            li s2 0 #Acumulador Cord X
+            li s3 0 #Acumulador Cord Y
+            li s4 0 #N
+            lw t4 n_points
+                sumcords:
+                    la t0 clusters
+                    slli t1 t4 4
+                    add t0 t0 t1
+                    lw t1 0(t0)
+                    lw t2 4(t0)
+                    lw t3 8(t0)
+                    addi t4 t4 -1
+                    bne s1 t1 sumcords
+                    add s2 s2 t2
+                    add s3 s3 t3
+                    addi s4 s4 1
+                    bgez t4 sumcords
+
+            div s2 s2 s4
+            div s3 s3 s4
+
+            la t0 centroids
+            slli t1 s1 3
+            add t0 t0 t1
+            sw s2 0(t0)
+            sw s3 4(t0)
+
+            #Guarda no vetor centroids i=k s2(x), s3(y)
+            addi s1 s1 -1
+            bgez s1 loopkcluster
+
+
+    lw ra 0(sp)                    # Carrega o return adress da stack (restaura a posição do stack pointer)
     addi sp sp 4
     jr ra
 
@@ -520,11 +558,11 @@ mainKMeans:
     lw s1 L
     Kmeansloop:
         sw s1 4(sp)
-        #cleanScreen
-        #calculateCentroids
-        #nearestCLuster
-        #printClusters
-        #printCentroids
+        jal cleanScreen
+        jal calculateCentroids
+        jal generatevectorcluster
+        jal printClusters
+        jal printCentroids
         lw s1 4(sp)
         addi s1 s1 -1
         bgez s1 Kmeansloop
