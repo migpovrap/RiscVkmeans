@@ -57,7 +57,7 @@ k:           .word 1
 
 # Abaixo devem ser declarados o vetor clusters (2a parte) e outras estruturas de dados
 # que o grupo considere necessarias para a solucao:
-#clusters:    
+clusters:   .zero  
 
 
 #Dados usados no algoritmo LCG para gerar numeros pseudo aleatorios
@@ -431,6 +431,10 @@ initializeCentroids:
     jr ra
 
 
+generatevectorcluster:
+
+
+
 ### mainKMeans
 # Executa o algoritmo *k-means*.
 # Argumentos: nenhum
@@ -438,4 +442,17 @@ initializeCentroids:
 
 mainKMeans:  
     # POR IMPLEMENTAR (2a parte)
+    cleanScreen
+    initializeCentroids(gera vetor clsuter)
+    nearestCLuster
+    printClusters
+    printCentroids
+
+    Este bloco é excutado L vezes
+        cleanScreen
+        calculateCentroids
+        nearestCLuster
+        printClusters
+        printCentroids
+
     jr ra
