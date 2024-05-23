@@ -96,8 +96,7 @@ colors:      .word 0xff0000, 0x00ff00, 0x0000ff  # Cores dos pontos do cluster 0
     #jal mainKMeans
     
     #Termina o programa (chamando chamada sistema)
-    li a7, 10
-    ecall
+
 
 
 ### printPoint
@@ -186,8 +185,36 @@ printClusters:
         addi s0 s0 -1
         bgez s0 k1pc
 
+    jr ra
+
     kmaior1pc:
-    # POR IMPLEMENTAR (2a parte)
+        
+        li t0 0
+       
+        km1printloop:
+
+            slli t1 t0 4 
+            la t2 clusters # Carrega o endereço do vetor Clusters
+            add t1 t2 t1
+            lw a0 4(t1) # Carrega as coordenadas (x,y) do ponto
+            lw a1 8(t1)
+
+            lw t1 0(t1) # Carrega o indice do cluster do ponto
+            la t2 colors # Carrega o endereco do vetor Colors   TROQUEI ESTA LINHA E A SEGUINTE (la e slli)
+            slli t1 t1 2 #Carrega a cor conforme indice do ponto
+            add t2 t2 t1
+            lw a2 0(t2) 
+
+            addi sp sp -8 # Salvaguarda espaço no stack pointer
+            sw t0 0(sp)
+            sw ra 4(sp)
+            jal printPoint # Pinta o ponto conforme seu cluster
+            lw t0 0(sp)
+            lw ra 4(sp)
+            addi sp sp 8
+            addi t0 t0 1 # Incrementa t0 para o indice do proximo ponto
+            lw t1 n_points
+            blt t0 t1 km1printloop # Loop se nao percorreu todos os pontos
     jr ra
 
 
@@ -441,34 +468,34 @@ generatevectorcluster:
 
     li t2 0
     genloopvc:
-        la t1 points # Carrega o endereço do vetor points
+        la t1 points
         slli t3 t2 3
         add t3 t1 t3
         lw a0 0(t3)
         lw a1 4(t3)
-        addi sp sp -12 # Abre espaco na stack para guardar registros temp necessarios para esta funcao
+        addi sp sp -12
         sw t2 0(sp)
-        sw ra 4(sp) # Guarda o endereço de retorno
+        sw ra 4(sp)
         sw t3 8(sp)
-        jal nearestCluster # Calcula o centroid mais proximo do ponto
+        jal nearestCluster
         lw t2 0(sp)
-        lw ra 4(sp) # Restaura o endereço de retorno
+        lw ra 4(sp)
         lw t3 8(sp)
         addi sp sp 12
 
-        lw a1 0(t3) # Carrega as coordenadas (x,y) do ponto
+        lw a1 0(t3)
         lw a2 4(t3)
 
-        la t0 clusters #Carrega o endereço do vetor Clusters
+        la t0 clusters
         slli t3 t2 4
         add t3 t0 t3
-        sw a0 0(t3) # Guarda o cluster associado ao ponto
-        sw a1 4(t3) # Guarda as coordenadas (x,y) do ponto
-        sw a2 8(t3)
+        sw a0 0(t3) #Id Cluster
+        sw a1 4(t3) #Cord X
+        sw a2 8(t3) #Cord Y
         
         addi t2 t2 1
         lw t0 n_points
-        blt t2 t0 genloopvc # Loop se houver pontos a carregar
+        blt t2 t0 genloopvc
 
     jr ra
 
@@ -480,25 +507,26 @@ generatevectorcluster:
 
 mainKMeans:  
     # POR IMPLEMENTAR (2a parte)
-    addi sp sp -4
+    addi sp sp -8
     sw ra 0(sp)
     jal cleanScreen
     jal initializeCentroids
     jal generatevectorcluster
+    jal printClusters
     jal printCentroids
-    #(gera vetor clsuter)
-    #nearestCLuster
-    #printClusters
-    #printCentroids
 
-
-    #Este bloco é excutado L vezes
+    lw s1 L
+    Kmeansloop:
+        sw s1 4(sp)
         #cleanScreen
         #calculateCentroids
         #nearestCLuster
         #printClusters
         #printCentroids
+        lw s1 4(sp)
+        addi s1 s1 -1
+        bgez s1 Kmeansloop
 
     lw ra 0(sp)
-    addi sp sp 4
+    addi sp sp 8
     jr ra
