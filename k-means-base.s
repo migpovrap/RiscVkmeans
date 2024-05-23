@@ -5,8 +5,8 @@
 # Campus: TagusPark
 #
 # Autores:
-# 110126, António Hernani Rebelo de Carvalho Correia
-# 109686, Miguel Póvoa Raposo
+# 110126, Antï¿½nio Hernani Rebelo de Carvalho Correia
+# 109686, Miguel Pï¿½voa Raposo
 # 110286, Pedro Miguel Ledo Santos Nazareth
 #
 # Tecnico/ULisboa
@@ -187,6 +187,8 @@ printClusters:
 
     jr ra
 
+    jr ra
+
     kmaior1pc:
         
         li t0 0
@@ -194,7 +196,7 @@ printClusters:
         km1printloop:
 
             slli t1 t0 4 
-            la t2 clusters # Carrega o endereço do vetor Clusters
+            la t2 clusters # Carrega o endereï¿½o do vetor Clusters
             add t1 t2 t1
             lw a0 4(t1) # Carrega as coordenadas (x,y) do ponto
             lw a1 8(t1)
@@ -205,7 +207,7 @@ printClusters:
             add t2 t2 t1
             lw a2 0(t2) 
 
-            addi sp sp -8 # Salvaguarda espaço no stack pointer
+            addi sp sp -8 # Salvaguarda espaï¿½o no stack pointer
             sw t0 0(sp)
             sw ra 4(sp)
             jal printPoint # Pinta o ponto conforme seu cluster
@@ -243,7 +245,7 @@ printCentroids:
         addi sp sp 4
         addi t0 t0 -1
         bgez t0 printloop
-    lw ra 0(sp)                     # Carrega o return adress da stack (restaura a posição do stack pointer)
+    lw ra 0(sp)                     # Carrega o return adress da stack (restaura a posiï¿½ï¿½o do stack pointer)
     addi sp sp 4
     jr ra
     
@@ -262,7 +264,7 @@ calculateCentroids:
     k1cc:
         lw t1 n_points 
         addi t1 t1 -1              # Decrementa o n de pontos de modo a coincidir com o indice do array
-        li s1 0                    # Inicializa a zero os acumuladores da soma para a média
+        li s1 0                    # Inicializa a zero os acumuladores da soma para a mï¿½dia
         li s2 0
         k1loop:                    # Loop para somar todos os pontos x (no s1) e y (no s2)
             la a0 points
@@ -275,15 +277,15 @@ calculateCentroids:
             addi t1 t1 -1
             bgez t1 k1loop
         lw t1 n_points
-        div s1 s1 t1               # Calcula a média das coordenadas
+        div s1 s1 t1               # Calcula a mï¿½dia das coordenadas
         div s2 s2 t1
-        la a0 centroids            # Guarada as coordenadas médias na posição 0 do vetor centroids (para k=1)
+        la a0 centroids            # Guarada as coordenadas mï¿½dias na posiï¿½ï¿½o 0 do vetor centroids (para k=1)
         sw s1 0(a0) 
         sw s2 4(a0)
     
     kmaior1cc:
     # POR IMPLEMENTAR (2a parte)
-    lw ra 0(sp)                    # Carrega o return adress da stack (restaura a posição do stack pointer)
+    lw ra 0(sp)                    # Carrega o return adress da stack (restaura a posiï¿½ï¿½o do stack pointer)
     addi sp sp 4
     jr ra
 
@@ -380,7 +382,7 @@ nearestCluster:
 
 
 ### randomgencord
-#Gera um par de coordenadas aleatórias
+#Gera um par de coordenadas aleatï¿½rias
 # Argumentos: nenhum
 # Retorno:
 # s0: x
@@ -398,7 +400,7 @@ randomgencord:
     slli t1, a1, 16            # Executa um ssli dos 16 bits nos segundos 32bits 
     add t0, t0, t1             # Adiciona o valor obtido pela operacao acima a seed
 
-    # Carrega constantes necessárias para o LCG
+    # Carrega constantes necessï¿½rias para o LCG
     lw t1, a
     lw t2, c
     lw t3, m
@@ -441,11 +443,11 @@ initializeCentroids:
         addi sp sp -12          # Abre espaco na stack para guardar registros temp necessarios para esta funcao 
         sw t0 0(sp)
         sw t1 4(sp)
-        sw ra 8(sp)             # Guarda o endereço de retorno
+        sw ra 8(sp)             # Guarda o endereï¿½o de retorno
         jal randomgencord       # Chama a funcao random que devolve no s0 e s1 duas cordenadas aleatorias
         lw t0 0(sp)
         lw t1 4(sp)
-        lw ra 8(sp)             # Restaura o endereço de retorno
+        lw ra 8(sp)             # Restaura o endereï¿½o de retorno
         addi sp sp 12
 
         slli t2 t1 3            # Bitshift usado para calcular o offset usado para guardar dados no vetor centroids
