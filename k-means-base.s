@@ -57,7 +57,7 @@ L:           .word 10
 
 # Abaixo devem ser declarados o vetor clusters (2a parte) e outras estruturas de dados
 # que o grupo considere necessarias para a solucao:
-clusters:   .zero  16384
+clusters:   .zero  16384 #(16Bits por cord max possivel 32x32=1024)
 
 
 #Dados usados no algoritmo LCG para gerar numeros pseudo aleatorios
@@ -260,7 +260,7 @@ calculateCentroids:
     lw t1 k
     addi sp sp -4                  # Guarda o return adress na stack (decrementa o stack pointer)
     sw ra 0(sp)
-    bne t1 t0 kmaior1cc            # Verifica se estamos me k= ou k>1
+    bne t1 t0 kmaior1cc            # Verifica se estamos me k=1 ou k>1
     k1cc:
         lw t1 n_points 
         addi t1 t1 -1              # Decrementa o n de pontos de modo a coincidir com o indice do array
@@ -295,7 +295,10 @@ calculateCentroids:
             li s3 0 #Acumulador Cord Y
             li s4 0 #N
             lw t4 n_points
+            addi s1 s1 -1
+            bltz s1 fimloop
                 sumcords:
+                    blez t4 loopkcluster
                     la t0 clusters
                     slli t1 t4 4
                     add t0 t0 t1
@@ -312,21 +315,20 @@ calculateCentroids:
             div s2 s2 s4
             div s3 s3 s4
 
-            la t0 centroids
+            la t0 centroids 
             slli t1 s1 3
             add t0 t0 t1
             sw s2 0(t0)
             sw s3 4(t0)
 
             #Guarda no vetor centroids i=k s2(x), s3(y)
-            addi s1 s1 -1
+           
             bgez s1 loopkcluster
 
-
+    fimloop:
     lw ra 0(sp)                    # Carrega o return adress da stack (restaura a posição do stack pointer)
     addi sp sp 4
     jr ra
-
 
 ### mainSingleCluster
 # Funcao principal da 1a parte do projeto.
