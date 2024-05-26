@@ -318,7 +318,7 @@ calculateCentroids:
             div s2 s2 s4
             div s3 s3 s4
 
-            la t0 centroids 
+            la t0 centroids       #Por alguma razao nao chega a esta parte nunca e executada, mudar estrutura de fluxo da funcao
             slli t1 s1 3
             add t0 t0 t1
             sw s2 0(t0)
