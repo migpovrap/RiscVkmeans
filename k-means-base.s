@@ -59,6 +59,9 @@ L:           .word 10
 # que o grupo considere necessarias para a solucao:
 clusters:   .zero  16384 #(16Bits por cord max possivel 32x32=1024)
 
+# Guarda os ultimos centroids
+lastcentroids:  .zero 128 
+
 
 #Dados usados no algoritmo LCG para gerar numeros pseudo aleatorios
 seed:       .word 12345        # Valor da seed
@@ -545,6 +548,54 @@ generatevectorcluster:
 
     jr ra
 
+### checkcentroidsupdate
+# Verifica se houve alteracao do vetor centroids comparando o com uma copia previa
+# Argumentos: 
+# a0: 0 Para so atualizar o vetor 
+# Retorno: a0 1 se houve alteracao
+
+checkcentroidsupdate:
+
+    beqz a0 updatevecor
+
+    lw t2 k
+    addi t2 t2 -1
+    checkloop:
+        la t0 lastcentroids
+        la t1 centroids
+        slli t3 t2 3
+        add t0 t0 t3
+        add t1 t1 t3
+        lw t3 0(t1)
+        lw t4 4(t1)
+        lw t5 0(t0)
+        lw t6 4(t0)
+        bne t3 t5 vectormodified
+        bne t4 t6 vectormodified
+        addi t2 t2 -1
+        bgez t2 checkloop
+        j updatevecor
+
+    vectormodified:
+        li a0 1
+
+    updatevecor:
+        lw t2 k
+        addi t2 t2 -1
+        loopupdate:
+            slli t3 t2 3
+            la t0 lastcentroids
+            la t1 centroids
+            add t0 t0 t3
+            add t1 t1 t3
+            lw t3 0(t1)
+            lw t4 4(t1)
+            sw t3 0(t0)
+            sw t4 4(t0)
+            addi t2 t2 -1
+            bgez t2 loopupdate
+
+    jr ra
 
 ### mainKMeans
 # Executa o algoritmo *k-means*.
@@ -557,6 +608,8 @@ mainKMeans:
     jal cleanScreen
     jal initializeCentroids
     jal generatevectorcluster
+    li a0 0
+    jal checkcentroidsupdate
     jal printClusters
     jal printCentroids
 
@@ -566,11 +619,29 @@ mainKMeans:
         jal cleanScreen
         jal calculateCentroids
         jal generatevectorcluster
+        li a0 2
+        li a1 2
+        jal checkcentroidsupdate
+        beq a0 a1 endkmeans 
         jal printClusters
         jal printCentroids
         lw s1 4(sp)
+
+        li a0 2 #Teste para verificar que este bloco de codigo executa
+        li a7 1
+        ecall
+
         addi s1 s1 -1
         bgez s1 Kmeansloop
+
+    endkmeans:
+        jal generatevectorcluster
+        jal printClusters
+        jal printCentroids
+
+        li a0 1 #Teste para verificar que este bloco de codigo executa
+        li a7 1
+        ecall
 
     lw ra 0(sp)
     addi sp sp 8
