@@ -291,9 +291,9 @@ calculateCentroids:
         lw s1 k
         addi s1 s1 -1
         loopkcluster:
-            li s2 0 #Acumulador Cord X
-            li s3 0 #Acumulador Cord Y
-            li s4 0 #N
+            li s2 0                    #Acumulador Cord X
+            li s3 0                    #Acumulador Cord Y
+            li s4 0                    #N
             lw t4 n_points
             addi s1 s1 -1
             bltz s1 fimloop
@@ -321,12 +321,12 @@ calculateCentroids:
             sw s2 0(t0)
             sw s3 4(t0)
 
-            #Guarda no vetor centroids i=k s2(x), s3(y)
+                                    #Guarda no vetor centroids i=k s2(x), s3(y)
            
             bgez s1 loopkcluster
 
     fimloop:
-    lw ra 0(sp)                    # Carrega o return adress da stack (restaura a posição do stack pointer)
+    lw ra 0(sp)                     # Carrega o return adress da stack (restaura a posição do stack pointer)
     addi sp sp 4
     jr ra
 
@@ -338,19 +338,19 @@ calculateCentroids:
 mainSingleCluster:
     addi sp sp -4
     sw ra 0(sp)
-    #1. Coloca k=1 (caso nao esteja a 1)
+                                    # Coloca k=1 (caso nao esteja a 1)
     la a0 k
     li t0 1
     sw t0 0(a0)
-    #2. cleanScreen
+    
     jal cleanScreen
-    #3. printClusters
+    
     jal printClusters
-    #4. calculateCentroids
+    
     jal calculateCentroids
-    #5. printCentroids
+   
     jal printCentroids
-    #6. Termina
+    
     lw ra 0(sp)
     addi sp sp 4
     jr ra
@@ -389,7 +389,7 @@ manhattanDistance:
 
 nearestCluster:
    lw t1 k
-   li s1 46 #Maior distancia possivel numa matriz 32x32
+   li s1 46                     #Maior distancia possivel numa matriz 32x32
    addi t1 t1 -1
    loopcentroids:
         la t0 centroids
@@ -430,7 +430,7 @@ nearestCluster:
 
 randomgencord:
 
-    li a7 30 #System Call usada para carregar o tempo em (ms) os primeiros 32bits no reg a0 e os segundos no reg a1 
+    li a7 30                   #System Call usada para carregar o tempo em (ms) os primeiros 32bits no reg a0 e os segundos no reg a1 
     ecall
     
     
@@ -440,12 +440,12 @@ randomgencord:
     slli t1, a1, 16            # Executa um ssli dos 16 bits nos segundos 32bits 
     add t0, t0, t1             # Adiciona o valor obtido pela operacao acima a seed
 
-    # Carrega constantes necess�rias para o LCG
+                               # Carrega constantes necessárias para o LCG
     lw t1, a
     lw t2, c
     lw t3, m
 
-    # Executa o LCG uma vez (Cordenada X)
+                               # Executa o LCG uma vez (Cordenada X)
     mul t4, t0, t1             # t4 = (seed + tempo) * a
     add t4, t4, t2             # t4 = t4 + c
     rem t0, t4, t3             # t0 = t4 % m
@@ -456,7 +456,7 @@ randomgencord:
     positive1:
     add s0, t0, zero           # Guarda a primeiro cordenada X
 
-    # Executa o LCG segunda vez (Cordenada Y)
+                               # Executa o LCG segunda vez (Cordenada Y)
     lw t0, seed                # Carrega a nova seed
     lw t1, a
     lw t2, c
@@ -474,7 +474,11 @@ randomgencord:
 
     jr ra
     
-    
+### initializeCentroids
+# Inicializa o vetor centroids com cordenadas geradas de forma pseudo aletoria pela funcao randomgencord
+# Argumentos: nenhum
+# Retorno: nenhum
+
 initializeCentroids:
     la t0 centroids
     lw t1 k
@@ -500,14 +504,14 @@ initializeCentroids:
     jr ra
 
 
+### generatevectorcluster
+# Gera o vetor clusters a partir dos centroids e da funcao nearestCluster
+# No vetor clusters os dados sao guardados da seguinte forma (id, x, y) o id o numero do cluster e a suas cordenadas
+# Argumentos: nenhum
+# Retorno: nenhum
+
 generatevectorcluster:
     
-    addi sp sp -4
-    sw ra 0(sp)
-    jal initializeCentroids
-    lw ra 0(sp)
-    addi sp sp 4
-
     li t2 0
     genloopvc:
         la t1 points
@@ -548,7 +552,6 @@ generatevectorcluster:
 # Retorno: nenhum
 
 mainKMeans:  
-    # POR IMPLEMENTAR (2a parte)
     addi sp sp -8
     sw ra 0(sp)
     jal cleanScreen
