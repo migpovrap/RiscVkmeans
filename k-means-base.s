@@ -59,7 +59,7 @@ L:           .word 10
 # que o grupo considere necessarias para a solucao:
 clusters:   .zero  16384 #(16Bits por cord max possivel 32x32=1024)
 
-# Guarda os ultimos centroids
+# Guarda os ultimos centroids de forma a verificar se estes alteraram
 lastcentroids:  .zero 128 
 
 
@@ -194,32 +194,32 @@ printClusters:
 
     kmaior1pc:
         
-        li t0 0
+        li t0 0                     # Comeca o ciclo de 0 a n_points
        
         km1printloop:
 
-            slli t1 t0 4 
-            la t2 clusters # Carrega o endere�o do vetor Clusters
-            add t1 t2 t1
-            lw a0 4(t1) # Carrega as coordenadas (x,y) do ponto
-            lw a1 8(t1)
+            slli t1 t0 4            # Calcula o offset de 4 no vetor cluster (id, x, y)
+            la t2 clusters          # Carrega o endereco do vetor cluster
+            add t1 t2 t1            # Adiciona o offset ao endereco base do vetor
+            lw a0 4(t1)             # Carrega a cordenada X
+            lw a1 8(t1)             # Carrega a cordenada Y
 
-            lw t1 0(t1) # Carrega o indice do cluster do ponto
-            la t2 colors # Carrega o endereco do vetor Colors   TROQUEI ESTA LINHA E A SEGUINTE (la e slli)
-            slli t1 t1 2 #Carrega a cor conforme indice do ponto
-            add t2 t2 t1
-            lw a2 0(t2) 
+            lw t1 0(t1)             # Carrega o indice do culster a que o ponto pertence
+            slli t1 t1 2            # Calcula o offset com base no indice para o vetor cor
+            la t2 colors            # Carrega o endereco do vetor colors
+            add t2 t2 t1            # Adiciona o offset ao endereco base do vetor
+            lw a2 0(t2)             # Carrega a cor pretendida no registro a2
 
-            addi sp sp -8 # Salvaguarda espa�o no stack pointer
+            addi sp sp -8           # Guarda alguns registros antes da chamada
             sw t0 0(sp)
             sw ra 4(sp)
-            jal printPoint # Pinta o ponto conforme seu cluster
+            jal printPoint          # Chama a funcao para dar print do ponto 
             lw t0 0(sp)
             lw ra 4(sp)
-            addi sp sp 8
-            addi t0 t0 1 # Incrementa t0 para o indice do proximo ponto
-            lw t1 n_points
-            blt t0 t1 km1printloop # Loop se nao percorreu todos os pontos
+            addi sp sp 8            # Carrega os registros guardados anteriormente
+            addi t0 t0 1
+            lw t1 n_points          # Carrega o numero de pontos
+            blt t0 t1 km1printloop  # Compara o atual ponto com o numero existente
     jr ra
 
 
