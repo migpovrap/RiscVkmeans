@@ -324,7 +324,10 @@ calculateCentroids:
             sw s2 0(t0)
             sw s3 4(t0)
 
-                                    #Guarda no vetor centroids i=k s2(x), s3(y)
+            li a0 3 #Teste para verificar que este bloco de codigo executa
+            li a7 1
+            ecall
+                                   #Guarda no vetor centroids i=k s2(x), s3(y)
            
             bgez s1 loopkcluster
 
