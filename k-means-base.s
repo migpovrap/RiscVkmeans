@@ -298,7 +298,7 @@ calculateCentroids:
             bgtz s4 savecentroids
             li s2 0                    #Acumulador Cord X
             li s3 0                    #Acumulador Cord Y
-            li s4 0                    #N
+                               #N
             lw t4 n_points
             addi s1 s1 -1
             bltz s1 fimloop
@@ -326,7 +326,7 @@ calculateCentroids:
             add t0 t0 t1
             sw s2 0(t0)
             sw s3 4(t0)
-
+            li s4 0 
             li a0 3 #Teste para verificar que este bloco de codigo executa
             li a7 1
             ecall
