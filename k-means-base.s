@@ -613,19 +613,24 @@ mainKMeans:
     jal generatevectorcluster
     li a0 0
     jal checkcentroidsupdate
+    jal printClusters
+    jal printCentroids
 
     lw s1 L
     Kmeansloop:
         sw s1 4(sp)
+        jal cleanScreen
         jal calculateCentroids
         jal generatevectorcluster
+        jal printClusters
+        jal printCentroids
 
         li a0 2
         li a1 2
         jal checkcentroidsupdate
-        beq a0 a1 endkmeans 
         lw s1 4(sp)
-
+        beq a0 a1 endkmeans 
+        
         li a0 2 #Teste para verificar que este bloco de codigo executa
         li a7 1
         ecall
@@ -634,9 +639,6 @@ mainKMeans:
         bgez s1 Kmeansloop
 
     endkmeans:
-        jal printClusters
-        jal printCentroids
-
         li a0 1 #Teste para verificar que este bloco de codigo executa
         li a7 1
         ecall
