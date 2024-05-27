@@ -292,13 +292,9 @@ calculateCentroids:
 
     kmaior1cc:
         lw s1 k
-        addi s1 s1 -1
         li s4 0
         loopkcluster:
             bgtz s4 savecentroids
-            li s2 0                    #Acumulador Cord X
-            li s3 0                    #Acumulador Cord Y
-                               #N
             lw t4 n_points
             addi s1 s1 -1
             bltz s1 fimloop
@@ -319,19 +315,22 @@ calculateCentroids:
 
             savecentroids:
             div s2 s2 s4
-            div s3 s3 s4
+            div s3 s3 s4          #Guarda no vetor centroids i=k s2(x), s3(y)
 
             la t0 centroids       #Por alguma razao nao chega a esta parte nunca e executada, mudar estrutura de fluxo da funcao
             slli t1 s1 3
             add t0 t0 t1
             sw s2 0(t0)
             sw s3 4(t0)
-            li s4 0 
+
+            li s2 0                    #Acumulador Cord X
+            li s3 0                    #Acumulador Cord Y
+            li s4 0                    #N
+            
             li a0 3 #Teste para verificar que este bloco de codigo executa
             li a7 1
             ecall
-                                   #Guarda no vetor centroids i=k s2(x), s3(y)
-           
+                                   
             bgez s1 loopkcluster
 
     fimloop:
