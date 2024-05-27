@@ -5,8 +5,8 @@
 # Campus: TagusPark
 #
 # Autores:
-# 110126, Ant�nio Hernani Rebelo de Carvalho Correia
-# 109686, Miguel P�voa Raposo
+# 110126, António Hernani Rebelo de Carvalho Correia
+# 109686, Miguel Póvoa Raposo
 # 110286, Pedro Miguel Ledo Santos Nazareth
 #
 # Tecnico/ULisboa
@@ -99,7 +99,8 @@ colors:      .word 0xff0000, 0x00ff00, 0x0000ff  # Cores dos pontos do cluster 0
     #jal mainKMeans
     
     #Termina o programa (chamando chamada sistema)
-
+    li a7, 10
+    ecall
 
 
 ### printPoint
@@ -187,7 +188,6 @@ printClusters:
         addi sp sp 12
         addi s0 s0 -1
         bgez s0 k1pc
-
     jr ra
 
     jr ra
@@ -248,7 +248,7 @@ printCentroids:
         addi sp sp 4
         addi t0 t0 -1
         bgez t0 printloop
-    lw ra 0(sp)                     # Carrega o return adress da stack (restaura a posi��o do stack pointer)
+    lw ra 0(sp)                     # Carrega o return adress da stack (restaura a posição do stack pointer)
     addi sp sp 4
     jr ra
     
@@ -267,7 +267,7 @@ calculateCentroids:
     k1cc:
         lw t1 n_points 
         addi t1 t1 -1              # Decrementa o n de pontos de modo a coincidir com o indice do array
-        li s1 0                    # Inicializa a zero os acumuladores da soma para a m�dia
+        li s1 0                    # Inicializa a zero os acumuladores da soma para a média
         li s2 0
         k1loop:                    # Loop para somar todos os pontos x (no s1) e y (no s2)
             la a0 points
@@ -280,9 +280,9 @@ calculateCentroids:
             addi t1 t1 -1
             bgez t1 k1loop
         lw t1 n_points
-        div s1 s1 t1               # Calcula a m�dia das coordenadas
+        div s1 s1 t1               # Calcula a média das coordenadas
         div s2 s2 t1
-        la a0 centroids            # Guarada as coordenadas m�dias na posi��o 0 do vetor centroids (para k=1)
+        la a0 centroids            # Guarada as coordenadas médias na posição 0 do vetor centroids (para k=1)
         sw s1 0(a0) 
         sw s2 4(a0)
 
@@ -428,7 +428,7 @@ nearestCluster:
 
 
 ### randomgencord
-#Gera um par de coordenadas aleat�rias
+#Gera um par de coordenadas aleatórias
 # Argumentos: nenhum
 # Retorno:
 # s0: x
@@ -493,11 +493,11 @@ initializeCentroids:
         addi sp sp -12          # Abre espaco na stack para guardar registros temp necessarios para esta funcao 
         sw t0 0(sp)
         sw t1 4(sp)
-        sw ra 8(sp)             # Guarda o endere�o de retorno
+        sw ra 8(sp)             # Guarda o endereco de retorno
         jal randomgencord       # Chama a funcao random que devolve no s0 e s1 duas cordenadas aleatorias
         lw t0 0(sp)
         lw t1 4(sp)
-        lw ra 8(sp)             # Restaura o endere�o de retorno
+        lw ra 8(sp)             # Restaura o endereco de retorno
         addi sp sp 12
 
         slli t2 t1 3            # Bitshift usado para calcular o offset usado para guardar dados no vetor centroids
