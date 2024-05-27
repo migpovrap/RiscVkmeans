@@ -293,7 +293,9 @@ calculateCentroids:
     kmaior1cc:
         lw s1 k
         addi s1 s1 -1
+        li s4 0
         loopkcluster:
+            bgtz s4 savecentroids
             li s2 0                    #Acumulador Cord X
             li s3 0                    #Acumulador Cord Y
             li s4 0                    #N
@@ -315,6 +317,7 @@ calculateCentroids:
                     addi s4 s4 1
                     bgez t4 sumcords
 
+            savecentroids:
             div s2 s2 s4
             div s3 s3 s4
 
