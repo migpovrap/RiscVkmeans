@@ -294,45 +294,45 @@ calculateCentroids:
     addi sp sp 4
     jr ra
 
-    kmaior1cc:                  # Calcula os centroides para k>1
-        lw s1 k                 # Carrega o numero de clusters 
-        li s4 0
-        loopkcluster:            # Loop para percorrer todos os clusters                         
-            bgtz s4 savecentroids     
+    kmaior1cc:                                # Calcula os centroides para k>1
+        lw s1 k                               # Numero de centroids existentes
+        li s4 0                               # Numero de pontos somados por cluster (para calcular o centroid)
+        loopkcluster:                         # Loop para percorrer todos os clusters                         
+            bgtz s4 savecentroids             # Caso s4>0 indica que foi calculado um centroid para o atual cluster (vai guarda-los no vetor centroids)
             lw t4 n_points
-            addi t4 t4 -1
-            addi s1 s1 -1
-            bltz s1 fimloop
+            addi t4 t4 -1                     # Os indices dos pontos no vetor points sao (0 a (npoints-1))
+            addi s1 s1 -1                     # Os indices dos cluster sao 0,1,2 nao 0,1,2,3
+            bltz s1 fimloop                   # Quando s1<0 ja foram calculados os centroids para todos os clusters
                 sumcords:
-                    bltz t4 loopkcluster
-                    la t0 clusters
-                    slli t1 t4 4
+                    bltz t4 loopkcluster      # Quando t4<0 o vetor points foi percorrido para um determinado vetor
+                    la t0 clusters            
+                    slli t1 t4 4              # Usa um bitshift de 4 ou seja 16bits para o vetor clusters (id, x, y)
                     add t0 t0 t1
-                    lw t1 0(t0)         #Carrega o indice do ponto do cluster
-                    lw t2 4(t0)         #Carrega a coordenada X do ponto do cluster
-                    lw t3 8(t0)         #Carrega a coordenada Y do ponto do cluster
-                    addi t4 t4 -1
-                    bne s1 t1 sumcords
-                    add s2 s2 t2        #Acumulador Cord X
-                    add s3 s3 t3        #Acumulador Cord Y
-                    addi s4 s4 1        
-                    bgez t4 sumcords
+                    lw t1 0(t0)               # Carrega o indice do ponto do cluster
+                    lw t2 4(t0)               # Carrega a coordenada X do ponto do cluster
+                    lw t3 8(t0)               # Carrega a coordenada Y do ponto do cluster
+                    addi t4 t4 -1             # Decrementa o contador do vetor points para cada cluster
+                    bne s1 t1 sumcords        # Se o indice do atual ponto nao for igual a do cluster em que estamos (0,1,2) passa para o proximo ponto
+                    add s2 s2 t2              # Acumulador Cord X
+                    add s3 s3 t3              # Acumulador Cord Y
+                    addi s4 s4 1              # Incrementa o contador de pontos somados do mesmo cluster usado para calcular o centroid
+                    bgez t4 sumcords          # Executa o sumcords para os (0 a (npoints-1)) points do vetor
 
-            savecentroids:
-            div s2 s2 s4
-            div s3 s3 s4          #Guarda no vetor centroids i=k s2(x), s3(y)
+            savecentroids:                    # Calcula o centroid e guarda o na posicao correta no vetor centroids
+            div s2 s2 s4                      # Calculo do X do centroid (media das cordenadas) s4 o numero de pontos somados
+            div s3 s3 s4                      # Calculo do X do centroid (media das cordenadas) s4 o numero de pontos somados
 
-            la t0 centroids       #Por alguma razao nao chega a esta parte nunca e executada, mudar estrutura de fluxo da funcao
-            slli t1 s1 3
-            add t0 t0 t1
-            sw s2 0(t0)
-            sw s3 4(t0)
+            la t0 centroids       
+            slli t1 s1 3                      # Calcula o offset baseado no s1 indice do cluster e dos centroids no vetor para k=3 (0,1,2)
+            add t0 t0 t1                      # Adiciona o offset calculado ao endereco base do vetor
+            sw s2 0(t0)                       # Guarda a cordenada X na posicao correta do vetor centroids
+            sw s3 4(t0)                       # Guarda a cordenada X na posicao correta do vetor centroids
 
-            li s2 0                    #Acumulador Cord X
-            li s3 0                    #Acumulador Cord Y
-            li s4 0                    #N
+            li s2 0                    # Retoma a zero o acumulador da cordenada X
+            li s3 0                    # Retoma a zero o acumulador da cordenada Y
+            li s4 0                    # Retoma a zero o contador do numero de pontos somados
                                    
-            bgez s1 loopkcluster
+            bgez s1 loopkcluster       # Executa o ciclo para s1 numero de centroids (k)
 
     fimloop:
     lw ra 0(sp)                     # Carrega o return adress da stack (restaura a posição do stack pointer)
