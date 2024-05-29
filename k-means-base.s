@@ -345,23 +345,20 @@ calculateCentroids:
 # Retorno: nenhum
 
 mainSingleCluster:
-    addi sp sp -4
-    sw ra 0(sp)
-                                    # Coloca k=1 (caso nao esteja a 1)
-    la a0 k
+    addi sp sp -4               # Move o stack pointer de forma a guardar o registros necessarios
+    sw ra 0(sp)                 # Guarda na stack o return adress
+
+    la a0 k                     # Coloca k=1 (caso nao esteja a 1)
     li t0 1
     sw t0 0(a0)
     
-    jal cleanScreen
-    
+    jal cleanScreen             # Chamadas de funcoes usada no mainSingleCluster
     jal printClusters
-    
     jal calculateCentroids
-   
     jal printCentroids
     
-    lw ra 0(sp)
-    addi sp sp 4
+    lw ra 0(sp)                 # Restaura o return adress
+    addi sp sp 4                # Restaura a posição do stack pointer
     jr ra
 
 
