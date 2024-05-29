@@ -44,6 +44,11 @@ n_points:    .word 30
 points:      .word 16, 1, 17, 2, 18, 6, 20, 3, 21, 1, 17, 4, 21, 7, 16, 4, 21, 6, 19, 6, 4, 24, 6, 24, 8, 23, 6, 26, 6, 26, 6, 23, 8, 25, 7, 26, 7, 20, 4, 21, 4, 10, 2, 10, 3, 11, 2, 12, 4, 13, 4, 9, 4, 9, 3, 8, 0, 10, 4, 10
 
 
+#Input E
+n_points:    .word 30
+points:      .word 16, 1, 17, 2, 18, 6, 20, 3, 21, 1, 17, 4, 21, 7, 16, 4, 21, 6, 19, 6, 4, 24, 6, 24, 8, 23, 6, 26, 5, 26, 6, 23, 8, 25, 7, 26, 7, 20, 4, 21, 4, 10, 2, 10, 3, 11, 2, 12, 4, 13, 4, 9, 4, 8, 3, 8, 0, 10, 4, 11
+
+
 # Valores de centroids e k a usar na 1a parte do projeto:
 #centroids:   .word 0,0
 #k:           .word 1
@@ -62,6 +67,9 @@ clusters:   .zero  16384 #(16Bits por cord max possivel 32x32=1024)
 # Guarda os ultimos centroids de forma a verificar se estes alteraram
 lastcentroids:  .zero 128 
 
+newline:  .string "\n"
+space: .string " "
+virg: .string ","
 
 #Dados usados no algoritmo LCG para gerar numeros pseudo aleatorios
 seed:       .word 12345        # Valor da seed
@@ -296,6 +304,7 @@ calculateCentroids:
         loopkcluster:            # Loop para percorrer todos os clusters                         
             bgtz s4 savecentroids     
             lw t4 n_points
+            addi t4 t4 -1
             addi s1 s1 -1
             bltz s1 fimloop
                 sumcords:
@@ -304,12 +313,33 @@ calculateCentroids:
                     slli t1 t4 4
                     add t0 t0 t1
                     lw t1 0(t0)         #Carrega o indice do ponto do cluster
-                    lw t2 4(t0)         #Carrega a coordenada x do ponto do cluster
-                    lw t3 8(t0)         #Carrega a coordenada x do ponto do cluster
+                    lw t2 4(t0)         #Carrega a coordenada X do ponto do cluster
+                    lw t3 8(t0)         #Carrega a coordenada Y do ponto do cluster
                     addi t4 t4 -1
                     bne s1 t1 sumcords
-                    add s2 s2 t2        #Acumulador Cord x
-                    add s3 s3 t3        #Acumulador Cord y
+                    add s2 s2 t2        #Acumulador Cord X
+                    add s3 s3 t3        #Acumulador Cord Y
+
+                    la a0, space
+                    li a7 4
+                    ecall
+
+                    add a0 t2 zero
+                    li a7 1
+                    ecall
+
+                    la a0, virg
+                    li a7 4
+                    ecall
+
+                    add a0 t3 zero
+                    li a7 1
+                    ecall
+
+                    la a0, space
+                    li a7 4
+                    ecall
+
                     addi s4 s4 1        
                     bgez t4 sumcords
 
@@ -323,13 +353,41 @@ calculateCentroids:
             sw s2 0(t0)
             sw s3 4(t0)
 
+                    la a0, space
+                    li a7 4
+                    ecall
+
+                    add a0 s2 zero
+                    li a7 1
+                    ecall
+
+                    la a0, space
+                    li a7 4
+                    ecall
+
+                    add a0 s3 zero
+                    li a7 1
+                    ecall
+
+                    la a0, space
+                    li a7 4
+                    ecall
+
+                    la a0, virg
+                    li a7 4
+                    ecall
+
+                    add a0 s4 zero
+                    li a7 1
+                    ecall
+
+                    la a0, newline
+                    li a7 4
+                    ecall
+
             li s2 0                    #Acumulador Cord X
             li s3 0                    #Acumulador Cord Y
             li s4 0                    #N
-            
-            li a0 3 #Teste para verificar que este bloco de codigo executa
-            li a7 1
-            ecall
                                    
             bgez s1 loopkcluster
 
@@ -634,10 +692,6 @@ mainKMeans:
         lw s1 4(sp)
         beq a0 a1 endkmeans 
         
-        li a0 2 #Teste para verificar que este bloco de codigo executa
-        li a7 1
-        ecall
-
         addi s1 s1 -1
         bgez s1 Kmeansloop
 
