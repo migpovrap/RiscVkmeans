@@ -290,11 +290,11 @@ calculateCentroids:
     addi sp sp 4
     jr ra
 
-    kmaior1cc:
-        lw s1 k
+    kmaior1cc:                  # Calcula os centroides para k>1
+        lw s1 k                 # Carrega o numero de clusters 
         li s4 0
-        loopkcluster:
-            bgtz s4 savecentroids
+        loopkcluster:            # Loop para percorrer todos os clusters                         
+            bgtz s4 savecentroids     
             lw t4 n_points
             addi s1 s1 -1
             bltz s1 fimloop
@@ -303,14 +303,14 @@ calculateCentroids:
                     la t0 clusters
                     slli t1 t4 4
                     add t0 t0 t1
-                    lw t1 0(t0)
-                    lw t2 4(t0)
-                    lw t3 8(t0)
+                    lw t1 0(t0)         #Carrega o indice do ponto do cluster
+                    lw t2 4(t0)         #Carrega a coordenada x do ponto do cluster
+                    lw t3 8(t0)         #Carrega a coordenada x do ponto do cluster
                     addi t4 t4 -1
                     bne s1 t1 sumcords
-                    add s2 s2 t2
-                    add s3 s3 t3
-                    addi s4 s4 1
+                    add s2 s2 t2        #Acumulador Cord x
+                    add s3 s3 t3        #Acumulador Cord y
+                    addi s4 s4 1        
                     bgez t4 sumcords
 
             savecentroids:
@@ -397,35 +397,35 @@ manhattanDistance:
 
 nearestCluster:
    lw t1 k
-   li s1 46                     #Maior distancia possivel numa matriz 32x32
+   li s1 64                     #Maior distancia possivel numa matriz 32x32
    addi t1 t1 -1
    loopcentroids:
-        la t0 centroids
-        slli t2 t1 3
-        add t2 t0 t2
-        lw a2 0(t2)
-        lw a3 4(t2)
-        addi sp sp -16
+        la t0 centroids         # Carrega o endereco do vetor centroids
+        slli t2 t1 3            # Calcula o offset de 3 no vetor centroids (x, y)
+        add t2 t0 t2            # Adiciona o offset ao endereco base do vetor
+        lw a2 0(t2)             # Carrega a cordenada x
+        lw a3 4(t2)             # Carrega a cordenada y
+        addi sp sp -16          # Abre espaco na stack para guardar registros temp
         sw ra 0(sp)
-        sw t1 4(sp)
+        sw t1 4(sp)             
         sw a0 8(sp)
         sw a1 12(sp)
-        jal manhattanDistance
-        add t3 a0 zero
-        lw ra 0(sp)
-        lw t1 4(sp)
-        lw a0 8(sp)
-        lw a1 12(sp)  
-        addi sp sp 16
+        jal manhattanDistance   # Chama a funcao "manhattanDistance" para calcular a distancia
+        add t3 a0 zero          # Guarda a distancia calculada
+        lw ra 0(sp)                 
+        lw t1 4(sp)             
+        lw a0 8(sp)             
+        lw a1 12(sp)            
+        addi sp sp 16           # Fecha espaco na stack
 
-        bgt t3 s1 next
-        add s1 t3 zero
-        add s2 t1 zero
+        bgt t3 s1 next          # Verifica se a distancia e menor que a anterior
+        add s1 t3 zero          # Guarda a menor distancia
+        add s2 t1 zero          # Guarda o indice do cluster
         next:
-            addi t1 t1 -1
-            bgez t1 loopcentroids
+            addi t1 t1 -1       
+            bgez t1 loopcentroids       # Verifica se ainda nao percorreu todos os centroids
 
-    add a0 s2 zero
+    add a0 s2 zero              # Guarda o indice do cluster mais proximo
     jr ra
 
 
@@ -521,35 +521,35 @@ initializeCentroids:
 generatevectorcluster:
     
     li t2 0
-    genloopvc:
-        la t1 points
-        slli t3 t2 3
-        add t3 t1 t3
-        lw a0 0(t3)
-        lw a1 4(t3)
-        addi sp sp -12
+    genloopvc:  
+        la t1 points        # Carrega o endereco do vetor points 
+        slli t3 t2 3        # Calcula o offset de 3 no vetor points (x, y)
+        add t3 t1 t3        # Adiciona o offset ao endereco base do vetor
+        lw a0 0(t3)         # Carrega a cordenada x
+        lw a1 4(t3)         # Carrega a cordenada y 
+        addi sp sp -12      # Abre espaco na stack para guardar registros temp
         sw t2 0(sp)
         sw ra 4(sp)
         sw t3 8(sp)
-        jal nearestCluster
+        jal nearestCluster  # Chama a funcao nearestCluster para calcular o cluster mais proximo
         lw t2 0(sp)
         lw ra 4(sp)
         lw t3 8(sp)
-        addi sp sp 12
+        addi sp sp 12       # Fecha espaco na stack
 
-        lw a1 0(t3)
+        lw a1 0(t3)         
         lw a2 4(t3)
 
-        la t0 clusters
-        slli t3 t2 4
-        add t3 t0 t3
-        sw a0 0(t3) #Id Cluster
-        sw a1 4(t3) #Cord X
-        sw a2 8(t3) #Cord Y
-        
-        addi t2 t2 1
-        lw t0 n_points
-        blt t2 t0 genloopvc
+        la t0 clusters      # Carrega o endereco do vetor clusters
+        slli t3 t2 4        # Calcula o offset de 4 no vetor clusters (id, x, y)
+        add t3 t0 t3        # Adiciona o offset ao endereco base do vetor clusters
+        sw a0 0(t3)         # Guarda o id do cluster
+        sw a1 4(t3)         # Guarda a cordenada x do cluster
+        sw a2 8(t3)         # Guarda a cordenada y do cluster
+
+        addi t2 t2 1        # Incrementa o indice do cluster
+        lw t0 n_points      # Carrega o numero de pontos
+        blt t2 t0 genloopvc # Verifica se ainda nao percorreu todos os pontos
 
     jr ra
 
@@ -561,44 +561,45 @@ generatevectorcluster:
 
 checkcentroidsupdate:
 
-    beqz a0 updatevecor
+    beqz a0 updatevecor         # Se a0 e zero, vai para updatevecor
 
-    lw t2 k
-    addi t2 t2 -1
-    checkloop:
-        la t0 lastcentroids
-        la t1 centroids
-        slli t3 t2 3
-        add t0 t0 t3
-        add t1 t1 t3
-        lw t3 0(t1)
+
+    lw t2 k                     # Carrega o numero de clusters
+    addi t2 t2 -1               
+    checkloop:                  # Loop para ccomprar todos os clusters
+        la t0 lastcentroids     # Carrega o endereco do vetor lastcentroids
+        la t1 centroids         # Carrega o endereco do vetor centroids
+        slli t3 t2 3            # Calcula o offset de 3 no vetor centroids (x, y)
+        add t0 t0 t3            # Adiciona o offset ao endereco base do vetor lastcentroids
+        add t1 t1 t3            # Adiciona o offset ao endereco base do vetor centroids
+        lw t3 0(t1)             # Carrega as cordenadas (x,y) do par de centroids
         lw t4 4(t1)
         lw t5 0(t0)
         lw t6 4(t0)
-        bne t3 t5 vectormodified
-        bne t4 t6 vectormodified
-        addi t2 t2 -1
-        bgez t2 checkloop
+        bne t3 t5 vectormodified    # Verifica se houve alteração na cordenada x
+        bne t4 t6 vectormodified    # Verifica se houve alteração na cordenada y
+        addi t2 t2 -1               
+        bgez t2 checkloop           # Verifica se ainda nao percorreu todos os pontos
         j updatevecor
 
     vectormodified:
-        li a0 1
+        li a0 1                     # Se houve alteracao, retorna 1
 
-    updatevecor:
-        lw t2 k
-        addi t2 t2 -1
+    updatevecor:    
+        lw t2 k                     # Carrega o numero de clusters
+        addi t2 t2 -1           
         loopupdate:
-            slli t3 t2 3
-            la t0 lastcentroids
-            la t1 centroids
-            add t0 t0 t3
-            add t1 t1 t3
-            lw t3 0(t1)
+            slli t3 t2 3            # Calcula o offset de 3 no vetor centroids (x, y)
+            la t0 lastcentroids     # Carrega o endereco do vetor lastcentroids
+            la t1 centroids         # Carrega o endereco do vetor centroids
+            add t0 t0 t3            # Adiciona o offset ao endereco base do vetor lastcentroids
+            add t1 t1 t3            # Adiciona o offset ao endereco base do vetor centroids
+            lw t3 0(t1)             # Carrega as cordenadas (x,y) do centroid
             lw t4 4(t1)
-            sw t3 0(t0)
-            sw t4 4(t0)
+            sw t3 0(t0)             # Guarda as coordenadas (x,y) do centroid em lastcentroids
+            sw t4 4(t0)             
             addi t2 t2 -1
-            bgez t2 loopupdate
+            bgez t2 loopupdate      # Verifica se ainda nao percorreu todos os centroids
 
     jr ra
 
