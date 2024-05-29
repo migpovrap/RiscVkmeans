@@ -610,39 +610,35 @@ checkcentroidsupdate:
 # Retorno: nenhum
 
 mainKMeans:  
-    addi sp sp -8
-    sw ra 0(sp)
-    jal cleanScreen
+    addi sp sp -8                   
+    sw ra 0(sp)                     # Guarda o return adress na stack
+    jal cleanScreen                 # Executa as funcoes para a primeira vez do kmeans
     jal initializeCentroids
     jal generatevectorcluster
-    li a0 0
+    li a0 0                         # Carrega o valor 0 no registro correto para que a funcao checkcentroidsupdate so atualize o seu vetor e nao verifique
     jal checkcentroidsupdate
     jal printClusters
     jal printCentroids
 
-    lw s1 L
+    lw s1 L                         # Numero  o numero maximo de iteracoes do algoritmo
     Kmeansloop:
-        sw s1 4(sp)
+        sw s1 4(sp)                 # Guarda o contador na stack
         jal cleanScreen
         jal calculateCentroids
         jal generatevectorcluster
         jal printClusters
         jal printCentroids
 
-        li a0 2
+        li a0 2                    # Um valor aliatorio de forma a verificar a resposta da funcao checkcentroidsupdate
         li a1 2
-        jal checkcentroidsupdate
-        lw s1 4(sp)
-        beq a0 a1 endkmeans 
+        jal checkcentroidsupdate 
+        lw s1 4(sp)                # Restaura o contador 
+        beq a0 a1 endkmeans        # Caso o valor do registro a0 nao seja alterado pela funcao checkcentroidsupdate ja nao existe atualizacao do centroids interrompe o algoritmo
         
         addi s1 s1 -1
         bgez s1 Kmeansloop
 
-    endkmeans:
-        li a0 1 #Teste para verificar que este bloco de codigo executa
-        li a7 1
-        ecall
-
-    lw ra 0(sp)
-    addi sp sp 8
+    endkmeans:   
+        lw ra 0(sp)               # Restaura o return adress
+        addi sp sp 8
     jr ra
