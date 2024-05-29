@@ -137,26 +137,26 @@ printPoint:
 # Retorno: nenhum
 
 cleanScreen:
-    li a2 white                     # Carrega a cor branca para a2
-    li a0 32                        # Carrega o tamanho da LED matrix para a0
+    li a2 white                                         # Carrega a cor branca para a2
+    li a0 32                                            # Carrega o tamanho da LED matrix para a0
     addi sp sp -4
     sw ra 0(sp)
         ledxloop:
-            li a1 32                # Carrega o tamanho da LED matrix para a1
+            li a1 32                                    # Carrega o tamanho da LED matrix para a1
         
             ledyloop:
                 addi sp sp -8
-                sw a0 0(sp)         # Salvaguarda coordenada x 
-                sw a1 4(sp)         # Salvaguarda coordenada y
-                jal printPoint      # Pinta o ponto (x,y) de branco
-                lw a0 0(sp)         # Carrega a coordenada x para a0
-                lw a1 4(sp)         # Carrega a coordenada y para a1
+                sw a0 0(sp)                             # Salvaguarda coordenada x 
+                sw a1 4(sp)                             # Salvaguarda coordenada y
+                jal printPoint                          # Pinta o ponto (x,y) de branco
+                lw a0 0(sp)                             # Carrega a coordenada x para a0
+                lw a1 4(sp)                             # Carrega a coordenada y para a1
                 addi sp sp 8
                 addi a1 a1 -1
-                bgez a1 ledyloop    # Verifica se pintou o ultimo ponto
+                bgez a1 ledyloop                        # Verifica se pintou o ultimo ponto
         
             addi a0 a0 -1
-            bgtz a0 ledxloop        # Verifica se pintou o ultimo ponto
+            bgtz a0 ledxloop                            # Verifica se pintou o ultimo ponto
             
     lw ra 0(sp)
     addi sp sp 4
@@ -168,26 +168,26 @@ cleanScreen:
 # Retorno: nenhum
 
 printClusters:
-    li t0 1                         # Carrega o valor 1 para t0
-    lw t1 k                         # Carrega k para t1
-    la s1 points                    # Carrega o endereco do vetor points para s1
-    lw s0 n_points                  # Carrega numero de pontos no vetor para s0
-    addi s0 s0 -1                   # Temp inverter o loop
-    bne t1 t0 kmaior1pc             # Verifica se k e maior ou igual a 1
+    li t0 1                                             # Carrega o valor 1 para t0
+    lw t1 k                                             # Carrega k para t1
+    la s1 points                                        # Carrega o endereco do vetor points para s1
+    lw s0 n_points                                      # Carrega numero de pontos no vetor para s0
+    addi s0 s0 -1                                       # Temp inverter o loop
+    bne t1 t0 kmaior1pc                                 # Verifica se k e maior ou igual a 1
     k1pc:
-        slli t0 s0 3                # Carrega o endereco do ultimo ponto do vetor para t1
+        slli t0 s0 3                                    # Carrega o endereco do ultimo ponto do vetor para t1
         add t1 s1 t0
-        lw a0 0(t1)                 # Carrega a coordenada x para a0
-        lw a1 4(t1)                 # Carrega a coordenada y para a1
-        la t3 colors                # Carrega o endereco das cores para t3
-        lw a2 0(t3)                 # Carrega a cor para a2 (vermelho)
+        lw a0 0(t1)                                     # Carrega a coordenada x para a0
+        lw a1 4(t1)                                     # Carrega a coordenada y para a1
+        la t3 colors                                    # Carrega o endereco das cores para t3
+        lw a2 0(t3)                                     # Carrega a cor para a2 (vermelho)
         addi sp sp -12
-        sw s1 0(sp)                 # Salvaguarda endereco do vetor points
-        sw s0 4(sp)                 # Salvaguarda numero de pontos do vetor
+        sw s1 0(sp)                                     # Salvaguarda endereco do vetor points
+        sw s0 4(sp)                                     # Salvaguarda numero de pontos do vetor
         sw ra 8(sp)
-        jal printPoint              # Pinta o ponto (x,y) de branco
-        lw s1 0(sp)                 # Carrega coordenada x para a0
-        lw s0 4(sp)                 # Salvaguarda numero de pontos do vetor para s0
+        jal printPoint                                  # Pinta o ponto (x,y) de branco
+        lw s1 0(sp)                                     # Carrega coordenada x para a0
+        lw s0 4(sp)                                     # Salvaguarda numero de pontos do vetor para s0
         lw ra 8(sp)
         addi sp sp 12
         addi s0 s0 -1
