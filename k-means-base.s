@@ -137,26 +137,26 @@ printPoint:
 # Retorno: nenhum
 
 cleanScreen:
-    li a2 white                                         # Carrega a cor branca para a2
-    li a0 32                                            # Carrega o tamanho da LED matrix para a0
+    li a2 white                               # Carrega a cor branca para a2
+    li a0 32                                  # Carrega o tamanho da LED matrix para a0
     addi sp sp -4
     sw ra 0(sp)
         ledxloop:
-            li a1 32                                    # Carrega o tamanho da LED matrix para a1
+            li a1 32                          # Carrega o tamanho da LED matrix para a1
         
             ledyloop:
                 addi sp sp -8
-                sw a0 0(sp)                             # Salvaguarda coordenada x 
-                sw a1 4(sp)                             # Salvaguarda coordenada y
-                jal printPoint                          # Pinta o ponto (x,y) de branco
-                lw a0 0(sp)                             # Carrega a coordenada x para a0
-                lw a1 4(sp)                             # Carrega a coordenada y para a1
+                sw a0 0(sp)                   # Salvaguarda coordenada x 
+                sw a1 4(sp)                   # Salvaguarda coordenada y
+                jal printPoint                # Pinta o ponto (x,y) de branco
+                lw a0 0(sp)                   # Carrega a coordenada x para a0
+                lw a1 4(sp)                   # Carrega a coordenada y para a1
                 addi sp sp 8
                 addi a1 a1 -1
-                bgez a1 ledyloop                        # Verifica se pintou o ultimo ponto
+                bgez a1 ledyloop              # Verifica se pintou o ultimo ponto
         
             addi a0 a0 -1
-            bgtz a0 ledxloop                            # Verifica se pintou o ultimo ponto
+            bgtz a0 ledxloop                  # Verifica se pintou o ultimo ponto
             
     lw ra 0(sp)
     addi sp sp 4
@@ -168,26 +168,26 @@ cleanScreen:
 # Retorno: nenhum
 
 printClusters:
-    li t0 1                                             # Carrega o valor 1 para t0
-    lw t1 k                                             # Carrega k para t1
-    la s1 points                                        # Carrega o endereco do vetor points para s1
-    lw s0 n_points                                      # Carrega numero de pontos no vetor para s0
-    addi s0 s0 -1                                       # Temp inverter o loop
-    bne t1 t0 kmaior1pc                                 # Verifica se k e maior ou igual a 1
+    li t0 1                                   # Carrega o valor 1 para t0
+    lw t1 k                                   # Carrega k para t1
+    la s1 points                              # Carrega o endereco do vetor points para s1
+    lw s0 n_points                            # Carrega numero de pontos no vetor para s0
+    addi s0 s0 -1                             # Temp inverter o loop
+    bne t1 t0 kmaior1pc                       # Verifica se k e maior ou igual a 1
     k1pc:
-        slli t0 s0 3                                    # Carrega o endereco do ultimo ponto do vetor para t1
+        slli t0 s0 3                          # Carrega o endereco do ultimo ponto do vetor para t1
         add t1 s1 t0
-        lw a0 0(t1)                                     # Carrega a coordenada x para a0
-        lw a1 4(t1)                                     # Carrega a coordenada y para a1
-        la t3 colors                                    # Carrega o endereco das cores para t3
-        lw a2 0(t3)                                     # Carrega a cor para a2 (vermelho)
+        lw a0 0(t1)                           # Carrega a coordenada x para a0
+        lw a1 4(t1)                           # Carrega a coordenada y para a1
+        la t3 colors                          # Carrega o endereco das cores para t3
+        lw a2 0(t3)                           # Carrega a cor para a2 (vermelho)
         addi sp sp -12
-        sw s1 0(sp)                                     # Salvaguarda endereco do vetor points
-        sw s0 4(sp)                                     # Salvaguarda numero de pontos do vetor
+        sw s1 0(sp)                           # Salvaguarda endereco do vetor points
+        sw s0 4(sp)                           # Salvaguarda numero de pontos do vetor
         sw ra 8(sp)
-        jal printPoint                                  # Pinta o ponto (x,y) de branco
-        lw s1 0(sp)                                     # Carrega coordenada x para a0
-        lw s0 4(sp)                                     # Salvaguarda numero de pontos do vetor para s0
+        jal printPoint                        # Pinta o ponto (x,y) de branco
+        lw s1 0(sp)                           # Carrega coordenada x para a0
+        lw s0 4(sp)                           # Salvaguarda numero de pontos do vetor para s0
         lw ra 8(sp)
         addi sp sp 12
         addi s0 s0 -1
@@ -198,32 +198,33 @@ printClusters:
 
     kmaior1pc:
         
-        li t0 0                     # Comeca o ciclo de 0 a n_points
+        li t0 0                               # Comeca o ciclo de 0 a n_points
        
         km1printloop:
 
-            slli t1 t0 4            # Calcula o offset de 4 no vetor cluster (id, x, y)
-            la t2 clusters          # Carrega o endereco do vetor cluster
-            add t1 t2 t1            # Adiciona o offset ao endereco base do vetor
-            lw a0 4(t1)             # Carrega a cordenada X
-            lw a1 8(t1)             # Carrega a cordenada Y
+            slli t1 t0 4                      # Calcula o offset de 4 no vetor cluster (id, x, y)
+            la t2 clusters                    # Carrega o endereco do vetor cluster
+            add t1 t2 t1                      # Adiciona o offset ao endereco base do vetor
+            lw a0 4(t1)                       # Carrega a cordenada X
+            lw a1 8(t1)                       # Carrega a cordenada Y
 
-            lw t1 0(t1)             # Carrega o indice do culster a que o ponto pertence
-            slli t1 t1 2            # Calcula o offset com base no indice para o vetor cor
-            la t2 colors            # Carrega o endereco do vetor colors
-            add t2 t2 t1            # Adiciona o offset ao endereco base do vetor
-            lw a2 0(t2)             # Carrega a cor pretendida no registro a2
+            lw t1 0(t1)                       # Carrega o indice do culster a que o ponto pertence
+            slli t1 t1 2                      # Calcula o offset com base no indice para o vetor cor
+            la t2 colors                      # Carrega o endereco do vetor colors
+            add t2 t2 t1                      # Adiciona o offset ao endereco base do vetor
+            lw a2 0(t2)                       # Carrega a cor pretendida no registro a2
 
-            addi sp sp -8           # Guarda alguns registros antes da chamada
+            addi sp sp -8                     # Guarda alguns registros antes da chamada
             sw t0 0(sp)
             sw ra 4(sp)
-            jal printPoint          # Chama a funcao para dar print do ponto 
+            jal printPoint                    # Chama a funcao para dar print do ponto 
             lw t0 0(sp)
             lw ra 4(sp)
-            addi sp sp 8            # Carrega os registros guardados anteriormente
+            addi sp sp 8                      # Carrega os registros guardados anteriormente
             addi t0 t0 1
-            lw t1 n_points          # Carrega o numero de pontos
-            blt t0 t1 km1printloop  # Compara o atual ponto com o numero existente
+            lw t1 n_points                    # Carrega o numero de pontos
+            blt t0 t1 km1printloop            # Compara o atual ponto com o numero existente
+
     jr ra
 
 
@@ -235,10 +236,10 @@ printClusters:
 
 printCentroids:
     lw t0 k 
-    addi t0 t0 -1                   # Decrementa o n de pontos de modo a coincidir com o indice do array
-    addi sp sp -4                   # Guarda o return adress na stack (decrementa o stack pointer)
+    addi t0 t0 -1                             # Decrementa o n de pontos de modo a coincidir com o indice do array
+    addi sp sp -4                             # Guarda o return adress na stack (decrementa o stack pointer)
     sw ra 0(sp)
-    printloop:                      # Loop para percorrer o vetor centroids e chamar o printPoints para cada coordenada
+    printloop:                                # Loop para percorrer o vetor centroids e chamar o printPoints para cada coordenada
         addi sp sp -4
         sw t0 0(sp)
         la t1 centroids
@@ -246,13 +247,13 @@ printCentroids:
         add t1 t1 t0
         lw a0 0(t1)
         lw a1 4(t1)
-        li a2 black                 # Define a cor usada para fazer o print dos centroides
+        li a2 black                           # Define a cor usada para fazer o print dos centroides
         jal printPoint
         lw t0 0(sp)
         addi sp sp 4
         addi t0 t0 -1
         bgez t0 printloop
-    lw ra 0(sp)                     # Carrega o return adress da stack (restaura a posição do stack pointer)
+    lw ra 0(sp)                               # Carrega o return adress da stack (restaura a posição do stack pointer)
     addi sp sp 4
     jr ra
     
@@ -265,15 +266,15 @@ printCentroids:
 calculateCentroids:
     li t0 1
     lw t1 k
-    addi sp sp -4                  # Guarda o return adress na stack (decrementa o stack pointer)
+    addi sp sp -4                             # Guarda o return adress na stack (decrementa o stack pointer)
     sw ra 0(sp)
-    bne t1 t0 kmaior1cc            # Verifica se estamos me k=1 ou k>1
+    bne t1 t0 kmaior1cc                       # Verifica se estamos me k=1 ou k>1
     k1cc:
         lw t1 n_points 
-        addi t1 t1 -1              # Decrementa o n de pontos de modo a coincidir com o indice do array
-        li s1 0                    # Inicializa a zero os acumuladores da soma para a média
+        addi t1 t1 -1                         # Decrementa o n de pontos de modo a coincidir com o indice do array
+        li s1 0                               # Inicializa a zero os acumuladores da soma para a média
         li s2 0
-        k1loop:                    # Loop para somar todos os pontos x (no s1) e y (no s2)
+        k1loop:                               # Loop para somar todos os pontos x (no s1) e y (no s2)
             la a0 points
             slli t2 t1 3
             add a0 a0 t2
@@ -284,13 +285,13 @@ calculateCentroids:
             addi t1 t1 -1
             bgez t1 k1loop
         lw t1 n_points
-        div s1 s1 t1               # Calcula a média das coordenadas
+        div s1 s1 t1                          # Calcula a média das coordenadas
         div s2 s2 t1
-        la a0 centroids            # Guarada as coordenadas médias na posição 0 do vetor centroids (para k=1)
+        la a0 centroids                       # Guarada as coordenadas médias na posição 0 do vetor centroids (para k=1)
         sw s1 0(a0) 
         sw s2 4(a0)
 
-    lw ra 0(sp)
+    lw ra 0(sp)                               # Carrega o return adress da stack (restaura a posisao do stack pointer)
     addi sp sp 4
     jr ra
 
@@ -328,14 +329,14 @@ calculateCentroids:
             sw s2 0(t0)                       # Guarda a cordenada X na posicao correta do vetor centroids
             sw s3 4(t0)                       # Guarda a cordenada X na posicao correta do vetor centroids
 
-            li s2 0                    # Retoma a zero o acumulador da cordenada X
-            li s3 0                    # Retoma a zero o acumulador da cordenada Y
-            li s4 0                    # Retoma a zero o contador do numero de pontos somados
+            li s2 0                           # Retoma a zero o acumulador da cordenada X
+            li s3 0                           # Retoma a zero o acumulador da cordenada Y
+            li s4 0                           # Retoma a zero o contador do numero de pontos somados
                                    
-            bgez s1 loopkcluster       # Executa o ciclo para s1 numero de centroids (k)
+            bgez s1 loopkcluster              # Executa o ciclo para s1 numero de centroids (k)
 
     fimloop:
-    lw ra 0(sp)                     # Carrega o return adress da stack (restaura a posição do stack pointer)
+    lw ra 0(sp)                               # Carrega o return adress da stack (restaura a posição do stack pointer)
     addi sp sp 4
     jr ra
 
@@ -345,20 +346,20 @@ calculateCentroids:
 # Retorno: nenhum
 
 mainSingleCluster:
-    addi sp sp -4               # Move o stack pointer de forma a guardar o registros necessarios
-    sw ra 0(sp)                 # Guarda na stack o return adress
+    addi sp sp -4                             # Move o stack pointer de forma a guardar o registros necessarios
+    sw ra 0(sp)                               # Guarda na stack o return adress
 
-    la a0 k                     # Coloca k=1 (caso nao esteja a 1)
+    la a0 k                                   # Coloca k=1 (caso nao esteja a 1)
     li t0 1
     sw t0 0(a0)
     
-    jal cleanScreen             # Chamadas de funcoes usada no mainSingleCluster
+    jal cleanScreen                           # Chamadas de funcoes usada no mainSingleCluster
     jal printClusters
     jal calculateCentroids
     jal printCentroids
     
-    lw ra 0(sp)                 # Restaura o return adress
-    addi sp sp 4                # Restaura a posição do stack pointer
+    lw ra 0(sp)                               # Restaura o return adress
+    addi sp sp 4                              # Restaura a posição do stack pointer
     jr ra
 
 
@@ -372,17 +373,17 @@ mainSingleCluster:
 # a0: distance
 
 manhattanDistance:
-    sub t0 a0 a2                        # Diferenaca entre as cordenadas X (x1-x2) 
-    sub t1 a1 a3                        # Diferenaca entre as cordenadas Y (y1-y2)
+    sub t0 a0 a2                              # Diferenaca entre as cordenadas X (x1-x2) 
+    sub t1 a1 a3                              # Diferenaca entre as cordenadas Y (y1-y2)
 
-    bgtz t0 y                           # Caso a diferenca seja negativa, passa a positivo caso contrario salta para o y 
+    bgtz t0 y                                 # Caso a diferenca seja negativa, passa a positivo caso contrario salta para o y 
     neg t0 t0
     y:
-        bgtz t1 fim                     # Caso a diferenaca seja negativa passa a positivo caso contrario salta para fim 
+        bgtz t1 fim                           # Caso a diferenaca seja negativa passa a positivo caso contrario salta para fim 
         neg t1 t1
     
     fim:
-        add a0 t0 t1                    # Guarda no registro que a manhattanDistance
+        add a0 t0 t1                          # Guarda no registro que a manhattanDistance
     jr ra
 
 
@@ -395,35 +396,35 @@ manhattanDistance:
 
 nearestCluster:
    lw t1 k
-   li s1 64                     #Maior distancia possivel numa matriz 32x32
+   li s1 64                                   #Maior distancia possivel numa matriz 32x32
    addi t1 t1 -1
    loopcentroids:
-        la t0 centroids         # Carrega o endereco do vetor centroids
-        slli t2 t1 3            # Calcula o offset de 3 no vetor centroids (x, y)
-        add t2 t0 t2            # Adiciona o offset ao endereco base do vetor
-        lw a2 0(t2)             # Carrega a cordenada x
-        lw a3 4(t2)             # Carrega a cordenada y
-        addi sp sp -16          # Abre espaco na stack para guardar registros temp
+        la t0 centroids                       # Carrega o endereco do vetor centroids
+        slli t2 t1 3                          # Calcula o offset de 3 no vetor centroids (x, y)
+        add t2 t0 t2                          # Adiciona o offset ao endereco base do vetor
+        lw a2 0(t2)                           # Carrega a cordenada x
+        lw a3 4(t2)                           # Carrega a cordenada y
+        addi sp sp -16                        # Abre espaco na stack para guardar registros temp
         sw ra 0(sp)
         sw t1 4(sp)             
         sw a0 8(sp)
         sw a1 12(sp)
-        jal manhattanDistance   # Chama a funcao "manhattanDistance" para calcular a distancia
-        add t3 a0 zero          # Guarda a distancia calculada
+        jal manhattanDistance                 # Chama a funcao "manhattanDistance" para calcular a distancia
+        add t3 a0 zero                        # Guarda a distancia calculada
         lw ra 0(sp)                 
         lw t1 4(sp)             
         lw a0 8(sp)             
         lw a1 12(sp)            
-        addi sp sp 16           # Fecha espaco na stack
+        addi sp sp 16                         # Fecha espaco na stack
 
-        bgt t3 s1 next          # Verifica se a distancia e menor que a anterior
-        add s1 t3 zero          # Guarda a menor distancia
-        add s2 t1 zero          # Guarda o indice do cluster
+        bgt t3 s1 next                        # Verifica se a distancia e menor que a anterior
+        add s1 t3 zero                        # Guarda a menor distancia
+        add s2 t1 zero                        # Guarda o indice do cluster
         next:
             addi t1 t1 -1       
-            bgez t1 loopcentroids       # Verifica se ainda nao percorreu todos os centroids
+            bgez t1 loopcentroids             # Verifica se ainda nao percorreu todos os centroids
 
-    add a0 s2 zero              # Guarda o indice do cluster mais proximo
+    add a0 s2 zero                            # Guarda o indice do cluster mais proximo
     jr ra
 
 
@@ -436,47 +437,47 @@ nearestCluster:
 
 randomgencord:
 
-    li a7 30                   #System Call usada para carregar o tempo em (ms) os primeiros 32bits no reg a0 e os segundos no reg a1 
+    li a7 30                                  #System Call usada para carregar o tempo em (ms) os primeiros 32bits no reg a0 e os segundos no reg a1 
     ecall
     
     
-    lw t0, seed                # Carrega a seed inicial
-    add t0, t0, a0             # Adiciona os primeiros 32Bits a seed
+    lw t0, seed                               # Carrega a seed inicial
+    add t0, t0, a0                            # Adiciona os primeiros 32Bits a seed
     
-    slli t1, a1, 16            # Executa um ssli dos 16 bits nos segundos 32bits 
-    add t0, t0, t1             # Adiciona o valor obtido pela operacao acima a seed
+    slli t1, a1, 16                           # Executa um ssli dos 16 bits nos segundos 32bits 
+    add t0, t0, t1                            # Adiciona o valor obtido pela operacao acima a seed
 
-                               # Carrega constantes necessárias para o LCG
+                                              # Carrega constantes necessárias para o LCG
     lw t1, a
     lw t2, c
     lw t3, m
 
-                               # Executa o LCG uma vez (Cordenada X)
-    mul t4, t0, t1             # t4 = (seed + tempo) * a
-    add t4, t4, t2             # t4 = t4 + c
-    rem t0, t4, t3             # t0 = t4 % m
+                                              # Executa o LCG uma vez (Cordenada X)
+    mul t4, t0, t1                            # t4 = (seed + tempo) * a
+    add t4, t4, t2                            # t4 = t4 + c
+    rem t0, t4, t3                            # t0 = t4 % m
     la t5 seed
-    sw t0  0(t5)                # Guarda a nova seed
-    bgez t0 positive1           #Usado para verificar se o numero gerado nao e negativo
-    neg t0 t0                   #Se este for passa a positivo
+    sw t0  0(t5)                              # Guarda a nova seed
+    bgez t0 positive1                         #Usado para verificar se o numero gerado nao e negativo
+    neg t0 t0                                 #Se este for passa a positivo
     positive1:
-    add s0, t0, zero           # Guarda a primeiro cordenada X
+    add s0, t0, zero                          # Guarda a primeiro cordenada X
 
-                               # Executa o LCG segunda vez (Cordenada Y)
-    lw t0, seed                # Carrega a nova seed
+                                              # Executa o LCG segunda vez (Cordenada Y)
+    lw t0, seed                               # Carrega a nova seed
     lw t1, a
     lw t2, c
     lw t3, m
 
-    mul t4, t0, t1             # t4 = seed * a
-    add t4, t4, t2             # t4 = t4 + c
-    rem t0, t4, t3             # t0 = t4 % m
+    mul t4, t0, t1                            # t4 = seed * a
+    add t4, t4, t2                            # t4 = t4 + c
+    rem t0, t4, t3                            # t0 = t4 % m
     la t5 seed
-    sw t0 0(t5)                # Guarda a nova seed
+    sw t0 0(t5)                               # Guarda a nova seed
     bgez t0 positive2
     neg t0 t0
     positive2:
-    add s1, t0, zero           # Guarda a segunda cordenada Y
+    add s1, t0, zero                          # Guarda a segunda cordenada Y
 
     jr ra
     
@@ -488,25 +489,25 @@ randomgencord:
 initializeCentroids:
     la t0 centroids
     lw t1 k
-    addi t1 t1 -1               # Decrementa o K para contar de forma correta de 0-2 (0,1,2) em vez de (0,1,2,3)
+    addi t1 t1 -1                             # Decrementa o K para contar de forma correta de 0-2 (0,1,2) em vez de (0,1,2,3)
     loopgencord:
-        addi sp sp -12          # Abre espaco na stack para guardar registros temp necessarios para esta funcao 
+        addi sp sp -12                        # Abre espaco na stack para guardar registros temp necessarios para esta funcao 
         sw t0 0(sp)
         sw t1 4(sp)
-        sw ra 8(sp)             # Guarda o endereco de retorno
-        jal randomgencord       # Chama a funcao random que devolve no s0 e s1 duas cordenadas aleatorias
+        sw ra 8(sp)                           # Guarda o endereco de retorno
+        jal randomgencord                     # Chama a funcao random que devolve no s0 e s1 duas cordenadas aleatorias
         lw t0 0(sp)
         lw t1 4(sp)
-        lw ra 8(sp)             # Restaura o endereco de retorno
+        lw ra 8(sp)                           # Restaura o endereco de retorno
         addi sp sp 12
 
-        slli t2 t1 3            # Bitshift usado para calcular o offset usado para guardar dados no vetor centroids
-        add t3 t0 t2            # Adiciona ao endereco base de centroids o offset necesario
-        sw s0 0(t3)             # Guarda o s0 cordenada X no vetor centroids na posicao correta
-        sw s1 4(t3)             # Guarda o s1 cordenada Y no vetor centroids na posicao correta
+        slli t2 t1 3                          # Bitshift usado para calcular o offset usado para guardar dados no vetor centroids
+        add t3 t0 t2                          # Adiciona ao endereco base de centroids o offset necesario
+        sw s0 0(t3)                           # Guarda o s0 cordenada X no vetor centroids na posicao correta
+        sw s1 4(t3)                           # Guarda o s1 cordenada Y no vetor centroids na posicao correta
 
-        addi t1 t1 -1           # Decrementa o contador K numero de centroids
-        bgez t1 loopgencord     # Jump para o inicio caso ainda nao seja menor que zero
+        addi t1 t1 -1                         # Decrementa o contador K numero de centroids
+        bgez t1 loopgencord                   # Jump para o inicio caso ainda nao seja menor que zero
     jr ra
 
 
@@ -520,34 +521,34 @@ generatevectorcluster:
     
     li t2 0
     genloopvc:  
-        la t1 points        # Carrega o endereco do vetor points 
-        slli t3 t2 3        # Calcula o offset de 3 no vetor points (x, y)
-        add t3 t1 t3        # Adiciona o offset ao endereco base do vetor
-        lw a0 0(t3)         # Carrega a cordenada x
-        lw a1 4(t3)         # Carrega a cordenada y 
-        addi sp sp -12      # Abre espaco na stack para guardar registros temp
+        la t1 points                          # Carrega o endereco do vetor points 
+        slli t3 t2 3                          # Calcula o offset de 3 no vetor points (x, y)
+        add t3 t1 t3                          # Adiciona o offset ao endereco base do vetor
+        lw a0 0(t3)                           # Carrega a cordenada x
+        lw a1 4(t3)                           # Carrega a cordenada y 
+        addi sp sp -12                        # Abre espaco na stack para guardar registros temp
         sw t2 0(sp)
         sw ra 4(sp)
         sw t3 8(sp)
-        jal nearestCluster  # Chama a funcao nearestCluster para calcular o cluster mais proximo
+        jal nearestCluster                    # Chama a funcao nearestCluster para calcular o cluster mais proximo
         lw t2 0(sp)
         lw ra 4(sp)
         lw t3 8(sp)
-        addi sp sp 12       # Fecha espaco na stack
+        addi sp sp 12                         # Fecha espaco na stack
 
         lw a1 0(t3)         
         lw a2 4(t3)
 
-        la t0 clusters      # Carrega o endereco do vetor clusters
-        slli t3 t2 4        # Calcula o offset de 4 no vetor clusters (id, x, y)
-        add t3 t0 t3        # Adiciona o offset ao endereco base do vetor clusters
-        sw a0 0(t3)         # Guarda o id do cluster
-        sw a1 4(t3)         # Guarda a cordenada x do cluster
-        sw a2 8(t3)         # Guarda a cordenada y do cluster
+        la t0 clusters                        # Carrega o endereco do vetor clusters
+        slli t3 t2 4                          # Calcula o offset de 4 no vetor clusters (id, x, y)
+        add t3 t0 t3                          # Adiciona o offset ao endereco base do vetor clusters
+        sw a0 0(t3)                           # Guarda o id do cluster
+        sw a1 4(t3)                           # Guarda a cordenada x do cluster
+        sw a2 8(t3)                           # Guarda a cordenada y do cluster
 
-        addi t2 t2 1        # Incrementa o indice do cluster
-        lw t0 n_points      # Carrega o numero de pontos
-        blt t2 t0 genloopvc # Verifica se ainda nao percorreu todos os pontos
+        addi t2 t2 1                          # Incrementa o indice do cluster
+        lw t0 n_points                        # Carrega o numero de pontos
+        blt t2 t0 genloopvc                   # Verifica se ainda nao percorreu todos os pontos
 
     jr ra
 
@@ -559,45 +560,45 @@ generatevectorcluster:
 
 checkcentroidsupdate:
 
-    beqz a0 updatevecor         # Se a0 e zero, vai para updatevecor
+    beqz a0 updatevecor                       # Se a0 e zero, vai para updatevecor
 
 
-    lw t2 k                     # Carrega o numero de clusters
+    lw t2 k                                   # Carrega o numero de clusters
     addi t2 t2 -1               
-    checkloop:                  # Loop para ccomprar todos os clusters
-        la t0 lastcentroids     # Carrega o endereco do vetor lastcentroids
-        la t1 centroids         # Carrega o endereco do vetor centroids
-        slli t3 t2 3            # Calcula o offset de 3 no vetor centroids (x, y)
-        add t0 t0 t3            # Adiciona o offset ao endereco base do vetor lastcentroids
-        add t1 t1 t3            # Adiciona o offset ao endereco base do vetor centroids
-        lw t3 0(t1)             # Carrega as cordenadas (x,y) do par de centroids
+    checkloop:                                # Loop para ccomprar todos os clusters
+        la t0 lastcentroids                   # Carrega o endereco do vetor lastcentroids
+        la t1 centroids                       # Carrega o endereco do vetor centroids
+        slli t3 t2 3                          # Calcula o offset de 3 no vetor centroids (x, y)
+        add t0 t0 t3                          # Adiciona o offset ao endereco base do vetor lastcentroids
+        add t1 t1 t3                          # Adiciona o offset ao endereco base do vetor centroids
+        lw t3 0(t1)                           # Carrega as cordenadas (x,y) do par de centroids
         lw t4 4(t1)
         lw t5 0(t0)
         lw t6 4(t0)
-        bne t3 t5 vectormodified    # Verifica se houve alteração na cordenada x
-        bne t4 t6 vectormodified    # Verifica se houve alteração na cordenada y
+        bne t3 t5 vectormodified              # Verifica se houve alteração na cordenada x
+        bne t4 t6 vectormodified              # Verifica se houve alteração na cordenada y
         addi t2 t2 -1               
-        bgez t2 checkloop           # Verifica se ainda nao percorreu todos os pontos
+        bgez t2 checkloop                     # Verifica se ainda nao percorreu todos os pontos
         j updatevecor
 
     vectormodified:
-        li a0 1                     # Se houve alteracao, retorna 1
+        li a0 1                               # Se houve alteracao, retorna 1
 
     updatevecor:    
-        lw t2 k                     # Carrega o numero de clusters
+        lw t2 k                               # Carrega o numero de clusters
         addi t2 t2 -1           
         loopupdate:
-            slli t3 t2 3            # Calcula o offset de 3 no vetor centroids (x, y)
-            la t0 lastcentroids     # Carrega o endereco do vetor lastcentroids
-            la t1 centroids         # Carrega o endereco do vetor centroids
-            add t0 t0 t3            # Adiciona o offset ao endereco base do vetor lastcentroids
-            add t1 t1 t3            # Adiciona o offset ao endereco base do vetor centroids
-            lw t3 0(t1)             # Carrega as cordenadas (x,y) do centroid
+            slli t3 t2 3                      # Calcula o offset de 3 no vetor centroids (x, y)
+            la t0 lastcentroids               # Carrega o endereco do vetor lastcentroids
+            la t1 centroids                   # Carrega o endereco do vetor centroids
+            add t0 t0 t3                      # Adiciona o offset ao endereco base do vetor lastcentroids
+            add t1 t1 t3                      # Adiciona o offset ao endereco base do vetor centroids
+            lw t3 0(t1)                       # Carrega as cordenadas (x,y) do centroid
             lw t4 4(t1)
-            sw t3 0(t0)             # Guarda as coordenadas (x,y) do centroid em lastcentroids
+            sw t3 0(t0)                       # Guarda as coordenadas (x,y) do centroid em lastcentroids
             sw t4 4(t0)             
             addi t2 t2 -1
-            bgez t2 loopupdate      # Verifica se ainda nao percorreu todos os centroids
+            bgez t2 loopupdate                # Verifica se ainda nao percorreu todos os centroids
 
     jr ra
 
@@ -608,34 +609,34 @@ checkcentroidsupdate:
 
 mainKMeans:  
     addi sp sp -8                   
-    sw ra 0(sp)                     # Guarda o return adress na stack
-    jal cleanScreen                 # Executa as funcoes para a primeira vez do kmeans
+    sw ra 0(sp)                               # Guarda o return adress na stack
+    jal cleanScreen                           # Executa as funcoes para a primeira vez do kmeans
     jal initializeCentroids
     jal generatevectorcluster
-    li a0 0                         # Carrega o valor 0 no registro correto para que a funcao checkcentroidsupdate so atualize o seu vetor e nao verifique
+    li a0 0                                   # Carrega o valor 0 no registro correto para que a funcao checkcentroidsupdate so atualize o seu vetor e nao verifique
     jal checkcentroidsupdate
     jal printClusters
     jal printCentroids
 
-    lw s1 L                         # Numero  o numero maximo de iteracoes do algoritmo
+    lw s1 L                                   # Numero  o numero maximo de iteracoes do algoritmo
     Kmeansloop:
-        sw s1 4(sp)                 # Guarda o contador na stack
+        sw s1 4(sp)                           # Guarda o contador na stack
         jal cleanScreen
         jal calculateCentroids
         jal generatevectorcluster
         jal printClusters
         jal printCentroids
 
-        li a0 2                    # Um valor aliatorio de forma a verificar a resposta da funcao checkcentroidsupdate
+        li a0 2                               # Um valor aliatorio de forma a verificar a resposta da funcao checkcentroidsupdate
         li a1 2
         jal checkcentroidsupdate 
-        lw s1 4(sp)                # Restaura o contador 
-        beq a0 a1 endkmeans        # Caso o valor do registro a0 nao seja alterado pela funcao checkcentroidsupdate ja nao existe atualizacao do centroids interrompe o algoritmo
+        lw s1 4(sp)                           # Restaura o contador 
+        beq a0 a1 endkmeans                   # Caso o valor do registro a0 nao seja alterado pela funcao checkcentroidsupdate ja nao existe atualizacao do centroids interrompe o algoritmo
         
         addi s1 s1 -1
         bgez s1 Kmeansloop
 
     endkmeans:   
-        lw ra 0(sp)               # Restaura o return adress
+        lw ra 0(sp)                           # Restaura o return adress
         addi sp sp 8
     jr ra
