@@ -67,10 +67,6 @@ clusters:   .zero  16384 #(16Bits por cord max possivel 32x32=1024)
 # Guarda os ultimos centroids de forma a verificar se estes alteraram
 lastcentroids:  .zero 128 
 
-newline:  .string "\n"
-space: .string " "
-virg: .string ","
-
 #Dados usados no algoritmo LCG para gerar numeros pseudo aleatorios
 seed:       .word 12345        # Valor da seed
 a:          .word 1664525      # Numero aleatorio para multiplicar
