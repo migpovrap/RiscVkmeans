@@ -5,8 +5,8 @@
 # Campus: TagusPark
 #
 # Autores:
-# 110126, Ant√≥nio Hernani Rebelo de Carvalho Correia
-# 109686, Miguel P√≥voa Raposo
+# 110126, AntÛnio Hernani Rebelo de Carvalho Correia
+# 109686, Miguel PÛvoa Raposo
 # 110286, Pedro Miguel Ledo Santos Nazareth
 #
 # Tecnico/ULisboa
@@ -240,20 +240,20 @@ printCentroids:
     addi sp sp -4                             # Guarda o return adress na stack (decrementa o stack pointer)
     sw ra 0(sp)
     printloop:                                # Loop para percorrer o vetor centroids e chamar o printPoints para cada coordenada
-        addi sp sp -4
-        sw t0 0(sp)
-        la t1 centroids
-        slli t0 t0 3
-        add t1 t1 t0
-        lw a0 0(t1)
-        lw a1 4(t1)
-        li a2 black                           # Define a cor usada para fazer o print dos centroides
-        jal printPoint
+        addi sp sp -4                         
+        sw t0 0(sp)    
+        la t1 centroids                       # Carrega o endereco do vetor centroids
+        slli t0 t0 3                          # Calcula um offset de 3 para o vetor centroids (x,y)
+        add t1 t1 t0                          # Adiciona o offset ao vetor centroids
+        lw a0 0(t1)                           # Carrega a coordenada x
+        lw a1 4(t1)                           # Carrega a coordenada y
+        li a2 black                           # Define a cor usada para fazer o print dos centroides (preto)
+        jal printPoint                        # Faz print do centroid
         lw t0 0(sp)
         addi sp sp 4
         addi t0 t0 -1
-        bgez t0 printloop
-    lw ra 0(sp)                               # Carrega o return adress da stack (restaura a posi√ß√£o do stack pointer)
+        bgez t0 printloop                     # Verifica se j· percorreu todos os centroids
+    lw ra 0(sp)                               # Carrega o return adress da stack (restaura a posiÁ„o do stack pointer)
     addi sp sp 4
     jr ra
     
@@ -265,29 +265,29 @@ printCentroids:
 
 calculateCentroids:
     li t0 1
-    lw t1 k
+    lw t1 k                                   # Carrega o numero de clusters
     addi sp sp -4                             # Guarda o return adress na stack (decrementa o stack pointer)
     sw ra 0(sp)
     bne t1 t0 kmaior1cc                       # Verifica se estamos me k=1 ou k>1
     k1cc:
         lw t1 n_points 
         addi t1 t1 -1                         # Decrementa o n de pontos de modo a coincidir com o indice do array
-        li s1 0                               # Inicializa a zero os acumuladores da soma para a m√©dia
+        li s1 0                               # Inicializa a zero os acumuladores da soma para a mÈdia
         li s2 0
         k1loop:                               # Loop para somar todos os pontos x (no s1) e y (no s2)
-            la a0 points
-            slli t2 t1 3
-            add a0 a0 t2
-            lw t2 0(a0)
-            lw t3 4(a0)
+            la a0 points                      # Carrega o endereco do vetor points
+            slli t2 t1 3                      # Calcula um offset de 3 para o vetor points (x,y)
+            add a0 a0 t2                      # Adiciona o offset ao vetor points
+            lw t2 0(a0)                       # Carrega a coordenada x
+            lw t3 4(a0)                       # Carrega a coordenada y
             add s1 s1 t2
             add s2 s2 t3
             addi t1 t1 -1
             bgez t1 k1loop
         lw t1 n_points
-        div s1 s1 t1                          # Calcula a m√©dia das coordenadas
+        div s1 s1 t1                          # Calcula a mÈdia das coordenadas
         div s2 s2 t1
-        la a0 centroids                       # Guarada as coordenadas m√©dias na posi√ß√£o 0 do vetor centroids (para k=1)
+        la a0 centroids                       # Guarada as coordenadas mÈdias na posiÁ„o 0 do vetor centroids (para k=1)
         sw s1 0(a0) 
         sw s2 4(a0)
 
@@ -336,7 +336,7 @@ calculateCentroids:
             bgez s1 loopkcluster              # Executa o ciclo para s1 numero de centroids (k)
 
     fimloop:
-    lw ra 0(sp)                               # Carrega o return adress da stack (restaura a posi√ß√£o do stack pointer)
+    lw ra 0(sp)                               # Carrega o return adress da stack (restaura a posiÁ„o do stack pointer)
     addi sp sp 4
     jr ra
 
@@ -359,7 +359,7 @@ mainSingleCluster:
     jal printCentroids
     
     lw ra 0(sp)                               # Restaura o return adress
-    addi sp sp 4                              # Restaura a posi√ß√£o do stack pointer
+    addi sp sp 4                              # Restaura a posiÁ„o do stack pointer
     jr ra
 
 
@@ -429,7 +429,7 @@ nearestCluster:
 
 
 ### randomgencord
-#Gera um par de coordenadas aleat√≥rias
+#Gera um par de coordenadas aleatÛrias
 # Argumentos: nenhum
 # Retorno:
 # s0: x
@@ -447,7 +447,7 @@ randomgencord:
     slli t1, a1, 16                           # Executa um ssli dos 16 bits nos segundos 32bits 
     add t0, t0, t1                            # Adiciona o valor obtido pela operacao acima a seed
 
-                                              # Carrega constantes necess√°rias para o LCG
+                                              # Carrega constantes necess·rias para o LCG
     lw t1, a
     lw t2, c
     lw t3, m
@@ -575,8 +575,8 @@ checkcentroidsupdate:
         lw t4 4(t1)
         lw t5 0(t0)
         lw t6 4(t0)
-        bne t3 t5 vectormodified              # Verifica se houve altera√ß√£o na cordenada x
-        bne t4 t6 vectormodified              # Verifica se houve altera√ß√£o na cordenada y
+        bne t3 t5 vectormodified              # Verifica se houve alteraÁ„o na cordenada x
+        bne t4 t6 vectormodified              # Verifica se houve alteraÁ„o na cordenada y
         addi t2 t2 -1               
         bgez t2 checkloop                     # Verifica se ainda nao percorreu todos os pontos
         j updatevecor
