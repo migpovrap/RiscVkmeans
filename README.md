@@ -16,11 +16,11 @@ This project implements the K-Means clustering algorithm in RISC-V assembly lang
     - Open the .s assembly file on ripes
     - Define a 32x32 LED Matrix with a 25 Led size
     - Comment the array that you want to use or define a new one
-        # Input A - Linha Inclinada
+        # Input A - Slanted Line
             n_points:    .word 9
             points:      .word 0,0, 1,1, 2,2, 3,3, 4,4, 5,5, 6,6, 7,7, 8,8
 
-        # Input B - Cruz
+        # Input B - Cross
             n_points:    .word 5
             points:      .word 4,2, 5,1, 5,2, 5,3, 6,2
 
