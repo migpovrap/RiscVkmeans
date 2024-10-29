@@ -41,4 +41,4 @@ This project implements the K-Means clustering algorithm in RISC-V assembly lang
 - [Pedro Nazareth](https://github.com/PNazareth)
 
 ## Disclaimer
-    All teacher material is propretie of João Pedro Faria Mendonça Barreto @ IST
+    All teacher material is property of João Pedro Faria Mendonça Barreto @ IST
